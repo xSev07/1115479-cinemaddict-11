@@ -1,7 +1,7 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Artemy Dmitrochenko](https://up.htmlacademy.ru/ecmascript/11/user/1115479).
-* Наставник: `Неизвестно`.
+* Наставник: [Артемий Бойков](https://htmlacademy.ru/profile/id607755).
 
 ---
 

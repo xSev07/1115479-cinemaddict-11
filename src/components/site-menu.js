@@ -1,3 +1,5 @@
+import {DISPLAYED_FILMS_IN_MENU} from "../const";
+
 export const createSiteMenuTemplate = (films) => {
   let filterCounts = new Map();
   filterCounts.set(`watchlist`, 0);
@@ -16,9 +18,21 @@ export const createSiteMenuTemplate = (films) => {
     <nav class="main-navigation">
       <div class="main-navigation__items">
         <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-        <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">${filterCounts.get(`watchlist`)}</span></a>
-        <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">${filterCounts.get(`history`)}</span></a>
-        <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">${filterCounts.get(`favorites`)}</span></a>
+        <a href="#watchlist" class="main-navigation__item">Watchlist 
+        ${filterCounts.get(`watchlist`) <= DISPLAYED_FILMS_IN_MENU ?
+      `<span class="main-navigation__item-count">${filterCounts.get(`watchlist`)}</span>` : ``
+    }
+        </a>
+        <a href="#history" class="main-navigation__item">History 
+        ${filterCounts.get(`history`) <= DISPLAYED_FILMS_IN_MENU ?
+      `<span class="main-navigation__item-count">${filterCounts.get(`history`)}</span>` : ``
+    } 
+        </a>
+        <a href="#favorites" class="main-navigation__item">Favorites 
+        ${filterCounts.get(`favorites`) <= DISPLAYED_FILMS_IN_MENU ?
+      `<span class="main-navigation__item-count">${filterCounts.get(`favorites`)}</span></a>` : ``
+    } 
+        </a>
       </div>
       <a href="#stats" class="main-navigation__additional">Stats</a>
     </nav>

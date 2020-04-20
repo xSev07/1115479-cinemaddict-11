@@ -1,6 +1,6 @@
-const DESCRIPTION_PREVIEW_LENGTH = 140;
+export const DESCRIPTION_PREVIEW_LENGTH = 140;
 
-const MONTH_NAMES = [
+export const MONTH_NAMES = [
   `January`,
   `February`,
   `March`,
@@ -15,14 +15,14 @@ const MONTH_NAMES = [
   `December`,
 ];
 
-const FilmsQuantity = {
+export const FilmsQuantity = {
   ALL: 22,
   ADDITIONAL: 2,
   SHOWING_ON_START: 5,
   SHOWING_BY_BUTTON: 5,
 };
 
-const AdditionalCategory = {
+export const AdditionalCategory = {
   RATE: {
     title: `Top rated`,
     additionalClass: `js-tr`,
@@ -33,9 +33,9 @@ const AdditionalCategory = {
   }
 };
 
-const PlaceInsert = {
+export const PlaceInsert = {
   BEFORE_END: `beforeend`,
   AFTER_END: `afterend`
 };
 
-export {DESCRIPTION_PREVIEW_LENGTH, MONTH_NAMES, FilmsQuantity, AdditionalCategory, PlaceInsert};
+export const DISPLAYED_FILMS_IN_MENU = 5;

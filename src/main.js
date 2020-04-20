@@ -51,18 +51,22 @@ showMoreButtonElement.addEventListener(`click`, () => {
   }
 });
 
-render(filmsElement, createFilmsExtraTemplate(AdditionalCategory.RATE));
-render(filmsElement, createFilmsExtraTemplate(AdditionalCategory.COMMENT));
-
-const filmsRatedElement = filmsElement.querySelector(`.js-tr`);
-// const filmsTopContainerElement = filmsRatedElement.querySelector(`.films-list__container`);
 const topRatedFilms = films.slice().sort((a, b) => b.rating - a.rating);
-renderElementsArray(topRatedFilms, filmsRatedElement, 0, FilmsQuantity.ADDITIONAL);
+if (topRatedFilms[0].rating !== 0) {
+  render(filmsElement, createFilmsExtraTemplate(AdditionalCategory.RATE));
+  const filmsRatedElement = filmsElement.querySelector(`.js-tr`);
+  // const filmsTopContainerElement = filmsRatedElement.querySelector(`.films-list__container`);
+  renderElementsArray(topRatedFilms, filmsRatedElement, 0, FilmsQuantity.ADDITIONAL);
+}
 
-const filmsCommentedElement = filmsElement.querySelector(`.js-mc`);
-// const filmsCommentedContainerElement = filmsCommentedElement.querySelector(`.films-list__container`);
+
 const mostCommentedFilms = films.slice().sort((a, b) => b.comments.length - a.comments.length);
-renderElementsArray(mostCommentedFilms, filmsCommentedElement, 0, FilmsQuantity.ADDITIONAL);
+if (mostCommentedFilms[0].comments.length !== 0) {
+  render(filmsElement, createFilmsExtraTemplate(AdditionalCategory.COMMENT));
+  const filmsCommentedElement = filmsElement.querySelector(`.js-mc`);
+  // const filmsCommentedContainerElement = filmsCommentedElement.querySelector(`.films-list__container`);
+  renderElementsArray(mostCommentedFilms, filmsCommentedElement, 0, FilmsQuantity.ADDITIONAL);
+}
 
 render(siteFooterStatisticsElement, createFooterStatistics(films.length));
 

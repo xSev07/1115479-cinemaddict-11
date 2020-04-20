@@ -135,10 +135,10 @@ const generateRuntime = () => {
   const hours = getRandomIntegerNumber(0, 2);
   const minutes = hours === 0 ? getRandomIntegerNumber(30, 59) : getRandomIntegerNumber(0, 59);
   return `${hours}h ${getFormatedNumber(minutes)}m`;
-}
+};
 
 const generateHumans = () => {
-  return generateRandomArray(humans, Count.HUMANS_MIN, Count.HUMANS_MAX)
+  return generateRandomArray(humans, Count.HUMANS_MIN, Count.HUMANS_MAX);
 };
 
 const generateComment = () => {
@@ -162,7 +162,7 @@ const generateFilm = () => {
     titleOriginal: `Original: ${title}`,
     age: getRandomArrayItem(ages),
     poster: getRandomArrayItem(posters),
-    rating: `${generateRating()}`,
+    rating: generateRating(),
     genres: generateGenres(),
     description: generateDescription(),
     comments: generateComments(),
@@ -172,6 +172,9 @@ const generateFilm = () => {
     releaseDate: getRandomDate(),
     runtime: generateRuntime(),
     country: getRandomArrayItem(countrys),
+    watchlist: getRandomBoolean(),
+    history: getRandomBoolean(),
+    favorites: getRandomBoolean()
   };
 };
 

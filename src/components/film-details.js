@@ -18,7 +18,7 @@ const createCommentTemplate = (comment) => {
       </div>
     </li>
   `);
-}
+};
 
 
 export const createFilmDetailsTemplate = (film) => {

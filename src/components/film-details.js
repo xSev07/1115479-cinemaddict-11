@@ -1,4 +1,4 @@
-import {getFormatedDate, getFormatedCommentDate} from "../util";
+import {createElement, getFormatedDate, getFormatedCommentDate} from "../util";
 
 const createCommentTemplate = (comment) => {
   const {text, emoji, author, date} = comment;
@@ -21,7 +21,7 @@ const createCommentTemplate = (comment) => {
 };
 
 
-export const createFilmDetailsTemplate = (film) => {
+const createFilmDetailsTemplate = (film) => {
   const {title, titleOriginal, poster, age, rating, genres, description, releaseDate, runtime, comments, director, writers, actors, country} = film;
 
   return (`
@@ -143,3 +143,25 @@ export const createFilmDetailsTemplate = (film) => {
     </section>
   `);
 };
+
+export default class FilmDetails {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmDetailsTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

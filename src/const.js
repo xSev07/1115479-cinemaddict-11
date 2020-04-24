@@ -33,9 +33,4 @@ export const AdditionalCategory = {
   }
 };
 
-export const PlaceInsert = {
-  BEFORE_END: `beforeend`,
-  AFTER_END: `afterend`
-};
-
 export const DISPLAYED_FILMS_IN_MENU = 5;

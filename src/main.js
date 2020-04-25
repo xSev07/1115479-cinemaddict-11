@@ -97,9 +97,11 @@ render(siteHeaderElement, new Profile().getElement());
 render(siteMainElement, new SiteMenu(films).getElement());
 render(siteMainElement, new Sort().getElement());
 
-const filmsComponent = new Films();
+const filmsComponent = new Films(films);
 render(siteMainElement, filmsComponent.getElement());
 
-renderFilms(filmsComponent, films);
+if (films.length > 0) {
+  renderFilms(filmsComponent, films);
+}
 
 render(siteFooterStatisticsElement, new Statistics(films.length).getElement());

@@ -28,7 +28,7 @@ const createFilmsTemplate = (haveData) => {
 export default class Films {
   constructor(data) {
     this._element = null;
-    this._haveData = !!data.length;
+    this.setData(data);
   }
 
   getTemplate() {

@@ -1,6 +1,7 @@
+import {createElement} from "../util";
 import {DESCRIPTION_PREVIEW_LENGTH} from "../const";
 
-export const createFilmCardTemplate = (film) => {
+const createFilmCardTemplate = (film) => {
   const {title, poster, rating, genres, description, releaseDate, runtime, comments} = film;
   const year = releaseDate.getFullYear();
   const descriptionPreview = description.length > DESCRIPTION_PREVIEW_LENGTH ? `${description.substring(0, DESCRIPTION_PREVIEW_LENGTH - 1)}...` : description;
@@ -24,3 +25,25 @@ export const createFilmCardTemplate = (film) => {
     </article>  
   `);
 };
+
+export default class FilmCard {
+  constructor(film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmCardTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

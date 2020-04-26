@@ -1,27 +1,16 @@
-import {createElement} from "../util";
+import AbstractComponent from "./abstract-component";
 
 const createFooterStatistics = (count) => {
   return `<p>${count.toLocaleString()} movies inside</p>`;
 };
 
-export default class Statistics {
+export default class Statistics extends AbstractComponent {
   constructor(count) {
+    super();
     this._filmsCount = count;
-    this._element = null;
   }
 
   getTemplate() {
     return createFooterStatistics(this._filmsCount);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

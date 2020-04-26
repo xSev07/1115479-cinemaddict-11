@@ -1,4 +1,4 @@
-import {getFormatedNumber} from "../util";
+import {getFormatedNumber} from "../utils/common";
 
 const Count = {
   DESCRIPTION_MIN: 1,

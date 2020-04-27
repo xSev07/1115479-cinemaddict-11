@@ -1,4 +1,4 @@
-import {createElement} from "../util";
+import AbstractComponent from "./abstract-component";
 
 const createProfileTemplate = () => {
   return (`
@@ -9,23 +9,8 @@ const createProfileTemplate = () => {
   `);
 };
 
-export default class Profile {
-  constructor() {
-    this._element = null;
-  }
-
+export default class Profile extends AbstractComponent {
   getTemplate() {
     return createProfileTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

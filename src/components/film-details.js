@@ -1,4 +1,5 @@
-import {createElement, getFormatedDate, getFormatedCommentDate} from "../util";
+import AbstractComponent from "./abstract-component";
+import {getFormatedCommentDate, getFormatedDate} from "../utils/common";
 
 const createCommentTemplate = (comment) => {
   const {text, emoji, author, date} = comment;
@@ -144,24 +145,17 @@ const createFilmDetailsTemplate = (film) => {
   `);
 };
 
-export default class FilmDetails {
+export default class FilmDetails extends AbstractComponent {
   constructor(film) {
+    super();
     this._film = film;
-    this._element = null;
   }
 
   getTemplate() {
     return createFilmDetailsTemplate(this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setCloseClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
   }
 }

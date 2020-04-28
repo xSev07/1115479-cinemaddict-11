@@ -25,5 +25,5 @@ export const render = (container, component, place = PlaceInsert.BEFORE_END) => 
 
 export const remove = (component) => {
   component.getElement().remove();
-  component.remove();
+  component.removeElement();
 };

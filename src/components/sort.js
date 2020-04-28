@@ -1,12 +1,12 @@
 import AbstractComponent from "./abstract-component";
 import {SortType} from "../const";
 
-const createSortTemplate = () => {
+const createSortTemplate = (sortType = SortType.DEFAULT) => {
   return (`
     <ul class="sort">
-      <li><a href="#" class="sort__button sort__button--active" data-sort="${SortType.DEFAULT}">Sort by default</a></li>
-      <li><a href="#" class="sort__button" data-sort="${SortType.DATE}">Sort by date</a></li>
-      <li><a href="#" class="sort__button" data-sort="${SortType.RATING}">Sort by rating</a></li>
+      <li><a href="#" class="sort__button ${sortType === SortType.DEFAULT ? `sort__button--active` : ``}" data-sort="${SortType.DEFAULT}">Sort by default</a></li>
+      <li><a href="#" class="sort__button ${sortType === SortType.DATE ? `sort__button--active` : ``}" data-sort="${SortType.DATE}">Sort by date</a></li>
+      <li><a href="#" class="sort__button ${sortType === SortType.RATING ? `sort__button--active` : ``}" data-sort="${SortType.RATING}">Sort by rating</a></li>
     </ul>
   `);
 };
@@ -18,7 +18,7 @@ export default class Sort extends AbstractComponent {
   }
 
   getTemplate() {
-    return createSortTemplate();
+    return createSortTemplate(this._currentSortType);
   }
 
   setClickHandler(handler) {

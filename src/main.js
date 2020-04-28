@@ -3,5 +3,5 @@ import {generateFilms} from "./mocks/film";
 import {FilmsQuantity} from "./const";
 
 const films = generateFilms(FilmsQuantity.ALL);
-const pageController = new PageController();
-pageController.render(films);
+const pageController = new PageController(films);
+pageController.render();

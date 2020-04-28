@@ -1,12 +1,7 @@
 import AbstractComponent from "./abstract-component";
+import {SortType} from "../const";
 
-const SortType = {
-  DEFAULT: `default`,
-  DATE: `date`,
-  RATING: `rating`,
-};
-
-export const createSortTemplate = () => {
+const createSortTemplate = () => {
   return (`
     <ul class="sort">
       <li><a href="#" class="sort__button sort__button--active" data-sort="${SortType.DEFAULT}">Sort by default</a></li>

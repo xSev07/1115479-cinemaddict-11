@@ -34,3 +34,9 @@ export const AdditionalCategory = {
 };
 
 export const DISPLAYED_FILMS_IN_MENU = 5;
+
+export const SortType = {
+  DEFAULT: `default`,
+  DATE: `date`,
+  RATING: `rating`,
+};

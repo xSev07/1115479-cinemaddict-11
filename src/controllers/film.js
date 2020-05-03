@@ -14,6 +14,8 @@ export default class FilmController {
     this._containerDetails = containerDetails;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
+    this._openFilmDetails = this._openFilmDetails.bind(this);
+    this._closeFilmDetails = this._closeFilmDetails.bind(this);
   }
 
   render(film) {

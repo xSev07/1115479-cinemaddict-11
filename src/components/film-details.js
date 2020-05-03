@@ -23,7 +23,7 @@ const createCommentTemplate = (comment) => {
 
 
 const createFilmDetailsTemplate = (film) => {
-  const {title, titleOriginal, poster, age, rating, genres, description, releaseDate, runtime, comments, director, writers, actors, country} = film;
+  const {title, titleOriginal, poster, age, rating, genres, description, releaseDate, runtime, comments, director, writers, actors, country, watchlist, history, favorites} = film;
 
   return (`
     <section class="film-details">
@@ -90,13 +90,13 @@ const createFilmDetailsTemplate = (film) => {
           </div>
     
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${watchlist ? `checked` : ``}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
     
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${history ? `checked` : ``}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
     
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${favorites ? `checked` : ``}>
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
         </div>

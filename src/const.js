@@ -41,3 +41,10 @@ export const SortType = {
   RATING: `rating`,
   COMMENTS: `comments`,
 };
+
+export const emojis = [
+  `smile`,
+  `sleeping`,
+  `puke`,
+  `angry`
+];

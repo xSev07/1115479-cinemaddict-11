@@ -21,9 +21,15 @@ export default class FilmController {
   render(film) {
     this._filmComponent = new FilmCard(film);
     this._filmComponent.setOpenClickHandler(this._openFilmDetails);
+    this._filmComponent.setWatchlistClickHandler(() => {});
+    this._filmComponent.setWatchedClickHandler(() => {});
+    this._filmComponent.setFavoriteClickHandler(() => {});
 
     this._filmDetailsComponent = new FilmDetails(film);
     this._filmDetailsComponent.setCloseClickHandler(this._closeFilmDetails);
+    this._filmDetailsComponent.setWatchlistClickHandler(() => {});
+    this._filmDetailsComponent.setWatchedClickHandler(() => {});
+    this._filmDetailsComponent.setFavoriteClickHandler(() => {});
     render(this._container, this._filmComponent);
   }
 

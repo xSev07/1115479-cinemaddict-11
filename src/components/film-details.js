@@ -1,6 +1,6 @@
-import AbstractComponent from "./abstract-component";
 import {emojis} from "../const";
 import {getFormatedCommentDate, getFormatedDate} from "../utils/common";
+import AbstractSmartComponent from "./abstract-smart-component";
 
 const createCommentTemplate = (comment) => {
   const {text, emoji, author, date} = comment;
@@ -33,7 +33,7 @@ const createEmojiTemplate = (name) => {
   return (`
     <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${name}" value="${name}">
     <label class="film-details__emoji-label" for="emoji-${name}">
-      <img src="./images/emoji/${name}.png" width="30" height="30" alt="emoji">
+      <img src="./images/emoji/${name}.png" width="30" height="30" alt="emoji" data-emoji-name="${name}">
     </label>  
   `);
 };
@@ -46,7 +46,7 @@ const createFilmDetailsTemplate = (film) => {
   const watchedTemplate = createFilmControlTemplate(`watched`, history);
   const favoriteTemplate = createFilmControlTemplate(`favorite`, favorites, `favorites`);
 
-  const commentTemplate = comments.map((it) => createCommentTemplate(it)).join(`\n`)
+  const commentTemplate = comments.map((it) => createCommentTemplate(it)).join(`\n`);
   const emojisTemplate = emojis.map((it) => createEmojiTemplate(it)).join(`\n`);
 
   return (`
@@ -146,29 +146,55 @@ const createFilmDetailsTemplate = (film) => {
   `);
 };
 
-export default class FilmDetails extends AbstractComponent {
+export default class FilmDetails extends AbstractSmartComponent {
   constructor(film) {
     super();
     this._film = film;
+    this._closeClickHandler = null;
+    this._watchlistClickHandler = null;
+    this._watchedClickHandler = null;
+    this._favoriteClickHandler = null;
+    this._emojiClickHandler = null;
   }
 
   getTemplate() {
     return createFilmDetailsTemplate(this._film);
   }
 
+  recoveryListeners() {
+    this.setCloseClickHandler(this._closeClickHandler);
+    this.setWatchlistClickHandler(this._watchlistClickHandler);
+    this.setWatchedClickHandler(this._watchedClickHandler);
+    this.setFavoriteClickHandler(this._favoriteClickHandler);
+    this.setEmojiClickHandler(this._emojiClickHandler);
+  }
+
+  rerender() {
+    super.rerender();
+  }
+
   setCloseClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+    this._closeClickHandler = handler;
   }
 
   setWatchlistClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, handler);
+    this._watchlistClickHandler = handler;
   }
 
   setWatchedClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, handler);
+    this._watchedClickHandler = handler;
   }
 
   setFavoriteClickHandler(handler) {
     this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, handler);
+    this._favoriteClickHandler = handler;
+  }
+
+  setEmojiClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`click`, handler);
+    this._emojiClickHandler = handler;
   }
 }

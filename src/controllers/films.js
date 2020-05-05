@@ -16,6 +16,8 @@ export default class FilmsController {
     this._showMoreButtonComponent = new ShowMoreButton();
     this._filmsElement = this._container.getElement();
     this._filmsContainerElement = container.getElement().querySelector(`.films-list__container`);
+    this._onDataChange = this._onDataChange.bind(this);
+    this._onViewChange = this._onViewChange.bind(this);
   }
 
   renderFilmsAfterSorting(films, start, finish) {
@@ -39,7 +41,7 @@ export default class FilmsController {
   _renderFilmsCards(element, array, start = 0, finish = array.length) {
     const newFilms = array.slice(start, finish)
       .map((film) => {
-        const filmController = new FilmController(element, siteFooterElement);
+        const filmController = new FilmController(element, siteFooterElement, this._onDataChange, this._onViewChange);
         filmController.render(film);
         return filmController;
       });
@@ -79,5 +81,21 @@ export default class FilmsController {
         remove(this._showMoreButtonComponent);
       }
     });
+  }
+
+  _onDataChange(oldData, newData) {
+    const index = this._films.findIndex((it) => it === oldData);
+
+    if (index === -1) {
+      return;
+    }
+    this._films = [].concat(this._films.splice(0, index), newData, this._films.splice(index + 1));
+    const controllerIndex = this._showedFilmController.findIndex((it) => it.compareFilmData(oldData));
+    // this._showedFilmController[controllerIndex].render(newData);
+    this._showedFilmController[controllerIndex].render(newData);
+  }
+
+  _onViewChange() {
+    this._showedFilmController.forEach((it) => it.setDefaultView());
   }
 }

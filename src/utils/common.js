@@ -2,9 +2,7 @@ import {SortType} from "../const";
 import moment from "moment";
 
 export const getFormatedNumber = (number) => {
-  // https://github.com/jsmreese/moment-duration-format
-  // return moment.duration(number, `m`).format(`hh:mm`);
-  return number < 10 ? `0${number}` : `${number}`;
+  return moment.duration(number, `m`).format(`hh[h] mm[m]`);
 };
 
 export const getFormatedDate = (date) => {

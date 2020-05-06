@@ -1,4 +1,5 @@
 import {getFormatedNumber} from "../utils/common";
+import {emojis} from "../const";
 
 const Count = {
   DESCRIPTION_MIN: 1,
@@ -70,13 +71,6 @@ const countrys = [
   `Canada`,
   `Brasil`,
   `Argentina`
-];
-
-const emojis = [
-  `smile`,
-  `sleeping`,
-  `puke`,
-  `angry`
 ];
 
 const reviewFish = `The Earth is captured by alien cats . This screenshot was taken by the famous tinfoil portrait artist ijustfoundtheporn on the official tinfoil cat Tumblr. You can see from the original of the post that it had already been posted thousands of times before anyone had even noticed the plot hole. The account was also highlighted on an article on Gizmodo , so it is no wonder he found the picture so noteworthy that he eventually post it on Tumblr. However, since his post it had been collected and reblogged thousands of times (many of them by the same user on the Tumblr and many others even on reddit.com /r/tumblr ) by dozens of tinfoil cat fans around the world.`;

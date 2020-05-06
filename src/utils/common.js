@@ -1,15 +1,19 @@
-import {MONTH_NAMES, SortType} from "../const";
+import {SortType} from "../const";
+import moment from "moment";
 
 export const getFormatedNumber = (number) => {
+  // https://github.com/jsmreese/moment-duration-format
+  // return moment.duration(number, `m`).format(`hh:mm`);
   return number < 10 ? `0${number}` : `${number}`;
 };
 
 export const getFormatedDate = (date) => {
-  return `${getFormatedNumber(date.getDate())} ${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
+  return moment(date).format(`DD MMMM YYYY`);
 };
 
 export const getFormatedCommentDate = (date) => {
-  return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${getFormatedNumber(date.getHours())}:${getFormatedNumber(date.getMinutes())}`;
+  // if ()
+  return moment(date).startOf(`day`).fromNow();
 };
 
 export const sortFilms = (films, sortType) => {

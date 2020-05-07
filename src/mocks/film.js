@@ -126,9 +126,11 @@ const generateGenres = () => {
 };
 
 const generateRuntime = () => {
-  const hours = getRandomIntegerNumber(0, 2);
-  const minutes = hours === 0 ? getRandomIntegerNumber(30, 59) : getRandomIntegerNumber(0, 59);
-  return `${hours}h ${getFormatedNumber(minutes)}m`;
+  const runtime = getRandomIntegerNumber(30, 120);
+  return getFormatedNumber(runtime);
+  // const hours = getRandomIntegerNumber(0, 2);
+  // const minutes = hours === 0 ? getRandomIntegerNumber(30, 59) : getRandomIntegerNumber(0, 59);
+  // return `${hours}h ${getFormatedNumber(minutes)}m`;
 };
 
 const generateHumans = () => {

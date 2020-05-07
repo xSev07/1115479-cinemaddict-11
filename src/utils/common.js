@@ -10,8 +10,14 @@ export const getFormatedDate = (date) => {
 };
 
 export const getFormatedCommentDate = (date) => {
-  // if ()
-  return moment(date).startOf(`day`).fromNow();
+  const currentDate = moment(new Date());
+  const targetDate = moment(date);
+  const diffDays = currentDate.diff(targetDate, `days`);
+  if (diffDays > 5) {
+    return targetDate.startOf(`day`).fromNow();
+  } else {
+    return targetDate.format(`YYYY/MM/DD hh:mm`);
+  }
 };
 
 export const sortFilms = (films, sortType) => {

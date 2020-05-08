@@ -8,9 +8,9 @@ import FilmsExtra from "../components/films-extra";
 const siteFooterElement = document.querySelector(`.footer`);
 
 export default class FilmsController {
-  constructor(container) {
+  constructor(container, filmsModel) {
     this._container = container;
-    this._films = [];
+    this._filmsModel = filmsModel;
     this._showedFilmController = [];
     this._showingFilmsCount = FilmsQuantity.SHOWING_ON_START;
     this._showMoreButtonComponent = new ShowMoreButton();
@@ -91,7 +91,6 @@ export default class FilmsController {
     }
     this._films = [].concat(this._films.splice(0, index), newData, this._films.splice(index + 1));
     const controllerIndex = this._showedFilmController.findIndex((it) => it.compareFilmData(oldData));
-    // this._showedFilmController[controllerIndex].render(newData);
     this._showedFilmController[controllerIndex].render(newData);
   }
 

@@ -128,9 +128,6 @@ const generateGenres = () => {
 const generateRuntime = () => {
   const runtime = getRandomIntegerNumber(30, 120);
   return getFormatedNumber(runtime);
-  // const hours = getRandomIntegerNumber(0, 2);
-  // const minutes = hours === 0 ? getRandomIntegerNumber(30, 59) : getRandomIntegerNumber(0, 59);
-  // return `${hours}h ${getFormatedNumber(minutes)}m`;
 };
 
 const generateHumans = () => {
@@ -154,6 +151,7 @@ const generateComments = () => {
 const generateFilm = () => {
   const title = getRandomArrayItem(filmsName);
   return {
+    id: String(new Date() + Math.random()),
     title,
     titleOriginal: `Original: ${title}`,
     age: getRandomArrayItem(ages),

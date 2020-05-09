@@ -30,9 +30,8 @@ export default class FilmsController {
     this._renderFilmsCards(this._filmsContainerElement, this._films, start, finish);
   }
 
-  render(films) {
-    this._films = films;
-    this._renderFilmsCards(this._filmsContainerElement, this._films, 0, this._showingFilmsCount);
+  render() {
+    this._renderFilmsCards(this._filmsContainerElement, this._filmsModel.getFilms(), 0, this._showingFilmsCount);
     this._renderShowMoreButton();
     this._renderTopRateFilms();
     this._renderMostCommentedFilms();
@@ -49,7 +48,7 @@ export default class FilmsController {
   }
 
   _renderTopRateFilms() {
-    const topRatedFilms = sortFilms(this._films, SortType.RATING);
+    const topRatedFilms = sortFilms(this._filmsModel.getFilms(), SortType.RATING);
     if (topRatedFilms[0].rating !== 0) {
       render(this._filmsElement, new FilmsExtra(AdditionalCategory.RATE));
       const filmsRatedElement = this._filmsElement.querySelector(`.js-tr`);
@@ -58,7 +57,7 @@ export default class FilmsController {
   }
 
   _renderMostCommentedFilms() {
-    const mostCommentedFilms = sortFilms(this._films, SortType.COMMENTS);
+    const mostCommentedFilms = sortFilms(this._filmsModel.getFilms(), SortType.COMMENTS);
     if (mostCommentedFilms[0].comments.length !== 0) {
       render(this._filmsElement, new FilmsExtra(AdditionalCategory.COMMENT));
       const filmsCommentedElement = this._filmsElement.querySelector(`.js-mc`);
@@ -67,7 +66,7 @@ export default class FilmsController {
   }
 
   _renderShowMoreButton() {
-    if (this._films.length <= this._showingFilmsCount) {
+    if (this._filmsModel.getFilms().length <= this._showingFilmsCount) {
       return;
     }
     render(this._filmsContainerElement, this._showMoreButtonComponent, PlaceInsert.AFTER_END);
@@ -76,8 +75,8 @@ export default class FilmsController {
       const prevFilmCount = this._showingFilmsCount;
       this._showingFilmsCount += FilmsQuantity.SHOWING_BY_BUTTON;
 
-      this._renderFilmsCards(this._filmsContainerElement, this._films, prevFilmCount, this._showingFilmsCount);
-      if (this._showingFilmsCount >= this._films.length) {
+      this._renderFilmsCards(this._filmsContainerElement, this._filmsModel.getFilms(), prevFilmCount, this._showingFilmsCount);
+      if (this._showingFilmsCount >= this._filmsModel.getFilms().length) {
         remove(this._showMoreButtonComponent);
       }
     });

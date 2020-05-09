@@ -1,8 +1,14 @@
-export default class Films {
-  constructor() {
-    this._films = [];
+import {FilterType} from "../const";
+import {getFilmsByFilter} from "../utils/filter";
+
+
+export default class FilmsModel {
+  constructor(films) {
+    this._films = films;
+    this._activeFilterType = FilterType.ALL;
 
     this._dataChangeHandlers = [];
+    this._filterChangeHandlers = [];
   }
 
   setFilms(films) {
@@ -10,7 +16,16 @@ export default class Films {
   }
 
   getFilms() {
+    return getFilmsByFilter(this._films, this._activeFilterType);
+  }
+
+  getFilmsAll() {
     return this._films;
+  }
+
+  setFilter(filterType) {
+    this._activeFilterType = filterType;
+    this._callHandlers(this._filterChangeHandlers);
   }
 
   updateFilm(id, film) {
@@ -20,10 +35,7 @@ export default class Films {
       return false;
     }
     this._films = [].concat(this._films.splice(0, index), film, this._films.splice(index + 1));
-    // const controllerIndex = this._showedFilmController.findIndex((it) => it.compareFilmData(film));
-    // this._showedFilmController[controllerIndex].render(film);
 
-    // ??
     this._callHandlers(this._dataChangeHandlers);
 
     return true;

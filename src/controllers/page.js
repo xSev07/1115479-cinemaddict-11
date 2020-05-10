@@ -1,8 +1,7 @@
-import {FilmsQuantity} from "../const";
+import {FilmsQuantity, FilterType} from "../const";
 import {render} from "../utils/render";
 import {sortFilms} from "../utils/common";
 import Profile from "../components/profile";
-import FilterComponent from "../components/filter";
 import Sort from "../components/sort";
 import Films from "../components/films";
 import FilmsController from "./films";
@@ -40,6 +39,12 @@ export default class PageController {
     }
 
     render(this._siteFooterStatisticsElement, new Statistics(this._films.length));
+
+    // const wl = document.querySelectorAll(`.main-navigation__item`);
+    // wl.forEach((it) => it.addEventListener(`click`, (evt) => {
+    //   evt.preventDefault();
+    //   this._filmsModel.setFilter(FilterType.WATCHLIST);
+    // }));
   }
 
   _onSortTypeChange(sortType) {

@@ -24,6 +24,9 @@ export const render = (container, component, place = PlaceInsert.BEFORE_END) => 
 };
 
 export const remove = (component) => {
+  // const t = component.getElement();
+  // debugger
+  // t.remove();
   component.getElement().remove();
   component.removeElement();
 };

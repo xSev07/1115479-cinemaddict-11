@@ -63,6 +63,12 @@ export default class FilmController {
     }
   }
 
+  destroy() {
+    remove(this._filmComponent);
+    remove(this._filmDetailsComponent);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
+  }
+
   _onDataUpdate(evt, film, propertyName) {
     evt.preventDefault();
     this._onDataChange(film, Object.assign({}, film, {[propertyName]: !film[propertyName]}));

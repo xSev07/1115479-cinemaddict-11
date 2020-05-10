@@ -18,13 +18,15 @@ export default class FilmsController {
     this._filmsContainerElement = container.getElement().querySelector(`.films-list__container`);
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
+    this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
+    this._filmsModel.setFilterChangeHandler(this._onFilterChange);
   }
 
   renderFilmsAfterSorting(films, start, finish) {
     this._films = films;
-    this._showedFilmController = [];
     this._showingFilmsCount = FilmsQuantity.SHOWING_ON_START;
-    this._filmsContainerElement.innerHTML = ``;
+    this._removeFilms();
     remove(this._showMoreButtonComponent);
     this._renderShowMoreButton();
     this._renderFilmsCards(this._filmsContainerElement, this._films, start, finish);
@@ -71,15 +73,17 @@ export default class FilmsController {
     }
     render(this._filmsContainerElement, this._showMoreButtonComponent, PlaceInsert.AFTER_END);
 
-    this._showMoreButtonComponent.setClickHandler(() => {
-      const prevFilmCount = this._showingFilmsCount;
-      this._showingFilmsCount += FilmsQuantity.SHOWING_BY_BUTTON;
+    this._showMoreButtonComponent.setClickHandler(this._onShowMoreButtonClick);
+  }
 
-      this._renderFilmsCards(this._filmsContainerElement, this._filmsModel.getFilms(), prevFilmCount, this._showingFilmsCount);
-      if (this._showingFilmsCount >= this._filmsModel.getFilms().length) {
-        remove(this._showMoreButtonComponent);
-      }
-    });
+  _onShowMoreButtonClick() {
+    const prevFilmCount = this._showingFilmsCount;
+    this._showingFilmsCount += FilmsQuantity.SHOWING_BY_BUTTON;
+
+    this._renderFilmsCards(this._filmsContainerElement, this._filmsModel.getFilms(), prevFilmCount, this._showingFilmsCount);
+    if (this._showingFilmsCount >= this._filmsModel.getFilms().length) {
+      remove(this._showMoreButtonComponent);
+    }
   }
 
   _onDataChange(oldData, newData) {
@@ -95,5 +99,20 @@ export default class FilmsController {
 
   _onViewChange() {
     this._showedFilmController.forEach((it) => it.setDefaultView());
+  }
+
+  _removeFilms() {
+    this._showedFilmController.forEach((it) => it.destroy());
+    this._showedFilmController = [];
+  }
+
+  _updateFilms() {
+    this._removeFilms();
+    this.render();
+  }
+
+  _onFilterChange() {
+    this._updateFilms();
+    // this.renderFilmsAfterSorting(this._filmsModel.getFilms(), 0, FilmsQuantity.SHOWING_ON_START);
   }
 }

@@ -34,7 +34,11 @@ export default class FilmsModel {
     if (index === -1) {
       return false;
     }
-    this._films = [].concat(this._films.splice(0, index), film, this._films.splice(index + 1));
+    debugger
+    // const t1 = this._films.splice(0, index);
+    // const t2 = this._films.splice(index + 1);
+
+    this._films = [].concat(this._films.splice(0, index), film, this._films.splice(1));
 
     this._callHandlers(this._dataChangeHandlers);
 

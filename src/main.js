@@ -10,7 +10,3 @@ momentDurationFormatSetup(moment);
 const films = generateFilms(FilmsQuantity.ALL);
 const pageController = new PageController(films);
 pageController.render();
-
-// const t = document.querySelector(`.film-card`);
-// debugger
-//   t.remove();

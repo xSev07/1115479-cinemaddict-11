@@ -35,8 +35,8 @@ export default class FilmsController {
   render() {
     this._renderFilmsCards(this._filmsContainerElement, this._filmsModel.getFilms(), 0, this._showingFilmsCount);
     this._renderShowMoreButton();
-    this._renderTopRateFilms();
-    this._renderMostCommentedFilms();
+    // this._renderTopRateFilms();
+    // this._renderMostCommentedFilms();
   }
 
   _renderFilmsCards(element, array, start = 0, finish = array.length) {
@@ -87,14 +87,20 @@ export default class FilmsController {
   }
 
   _onDataChange(oldData, newData) {
-    const index = this._films.findIndex((it) => it === oldData);
-
-    if (index === -1) {
-      return;
+    const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
+    if (isSuccess) {
+      const controllerIndex = this._showedFilmController.findIndex((it) => it.compareFilmData(oldData));
+      this._showedFilmController[controllerIndex].render(newData);
     }
-    this._films = [].concat(this._films.splice(0, index), newData, this._films.splice(index + 1));
-    const controllerIndex = this._showedFilmController.findIndex((it) => it.compareFilmData(oldData));
-    this._showedFilmController[controllerIndex].render(newData);
+
+    // const index = this._films.findIndex((it) => it === oldData);
+    //
+    // if (index === -1) {
+    //   return;
+    // }
+    // this._films = [].concat(this._films.splice(0, index), newData, this._films.splice(index + 1));
+    // const controllerIndex = this._showedFilmController.findIndex((it) => it.compareFilmData(oldData));
+    // this._showedFilmController[controllerIndex].render(newData);
   }
 
   _onViewChange() {
@@ -113,6 +119,5 @@ export default class FilmsController {
 
   _onFilterChange() {
     this._updateFilms();
-    // this.renderFilmsAfterSorting(this._filmsModel.getFilms(), 0, FilmsQuantity.SHOWING_ON_START);
   }
 }

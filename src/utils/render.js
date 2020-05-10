@@ -24,9 +24,16 @@ export const render = (container, component, place = PlaceInsert.BEFORE_END) => 
 };
 
 export const remove = (component) => {
-  // const t = component.getElement();
-  // debugger
-  // t.remove();
   component.getElement().remove();
   component.removeElement();
+};
+
+export const replace = (newComponent, oldComponent) => {
+  const parentElement = oldComponent.getElement().parentElement;
+  const newElement = newComponent.getElement();
+  const oldElement = oldComponent.getElement();
+
+  if (parentElement.contains(oldElement)) {
+    parentElement.replaceChild(newElement, oldElement);
+  }
 };

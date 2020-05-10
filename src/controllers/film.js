@@ -1,4 +1,4 @@
-import {remove, render} from "../utils/render";
+import {remove, render, replace} from "../utils/render";
 import FilmCard from "../components/film-card";
 import FilmDetails from "../components/film-details";
 
@@ -24,7 +24,10 @@ export default class FilmController {
   }
 
   render(film) {
+    debugger
     this._onViewChange();
+    const oldFilmComponent = this._filmComponent;
+    const oldFilmDetailsComponent = this._filmDetailsComponent;
     this._filmComponent = new FilmCard(film);
     this._filmComponent.setOpenClickHandler(this._openFilmDetails);
     // this._filmComponent.setWatchlistClickHandler((evt) => this._onDataUpdate(evt, film, `watchlist`));
@@ -49,7 +52,12 @@ export default class FilmController {
       selectedEmojiElement.innerHTML = `<img src="images/emoji/${selectedEmoji}.png" width="55" height="55" alt="emoji-${selectedEmoji}">`;
     });
 
-    render(this._container, this._filmComponent);
+    if (oldFilmComponent && oldFilmDetailsComponent) {
+      replace(this._filmComponent, oldFilmComponent);
+      replace(this._filmDetailsComponent, oldFilmDetailsComponent);
+    } else {
+      render(this._container, this._filmComponent);
+    }
   }
 
   compareFilmData(filmData) {

@@ -1,5 +1,5 @@
 import {DESCRIPTION_PREVIEW_LENGTH} from "../const";
-import AbstractComponent from "./abstract-component";
+import AbstractSmartComponent from "./abstract-smart-component";
 
 const createFilmCardTemplate = (film) => {
   const {title, poster, rating, genres, description, releaseDate, runtime, comments, watchlist, history, favorites} = film;
@@ -27,10 +27,14 @@ const createFilmCardTemplate = (film) => {
   `);
 };
 
-export default class FilmCard extends AbstractComponent {
+export default class FilmCard extends AbstractSmartComponent {
   constructor(film) {
     super();
     this._film = film;
+    this._openClickHandler = null;
+    this._watchlistClickHandler = null;
+    this._watchedClickHandler = null;
+    this._favoriteClickHandler = null;
   }
 
   getFilmData() {
@@ -41,7 +45,15 @@ export default class FilmCard extends AbstractComponent {
     return createFilmCardTemplate(this._film);
   }
 
+  recoveryListeners() {
+    this.setOpenClickHandler(this._openClickHandler);
+    this.setWatchlistClickHandler(this._watchlistClickHandler);
+    this.setWatchedClickHandler(this._watchedClickHandler);
+    this.setFavoriteClickHandler(this._favoriteClickHandler);
+  }
+
   setOpenClickHandler(handler) {
+    this._openClickHandler = handler;
     this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, handler);
     this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, handler);
     this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, handler);

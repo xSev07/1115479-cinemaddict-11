@@ -24,22 +24,14 @@ export default class FilmController {
   }
 
   render(film) {
-    debugger
-    this._onViewChange();
     const oldFilmComponent = this._filmComponent;
     const oldFilmDetailsComponent = this._filmDetailsComponent;
     this._filmComponent = new FilmCard(film);
     this._filmComponent.setOpenClickHandler(this._openFilmDetails);
-    // this._filmComponent.setWatchlistClickHandler((evt) => this._onDataUpdate(evt, film, `watchlist`));
-    // this._filmComponent.setWatchedClickHandler((evt) => this._onDataUpdate(evt, film, `history`));
-    // this._filmComponent.setFavoriteClickHandler((evt) => this._onDataUpdate(evt, film, `favorites`));
     this._setStatusClickHandlers(this._filmComponent, film);
 
     this._filmDetailsComponent = new FilmDetails(film);
     this._filmDetailsComponent.setCloseClickHandler(this._closeFilmDetails);
-    // this._filmDetailsComponent.setWatchlistClickHandler((evt) => this._onDataUpdate(evt, film, `watchlist`));
-    // this._filmDetailsComponent.setWatchedClickHandler((evt) => this._onDataUpdate(evt, film, `history`));
-    // this._filmDetailsComponent.setFavoriteClickHandler((evt) => this._onDataUpdate(evt, film, `favorites`));
     this._setStatusClickHandlers(this._filmDetailsComponent, film);
     this._filmDetailsComponent.setEmojiClickHandler((evt) => {
       if (evt.target.tagName !== `IMG`) {
@@ -53,9 +45,13 @@ export default class FilmController {
     });
 
     if (oldFilmComponent && oldFilmDetailsComponent) {
+      // this._filmComponent.rerender();
+      // this._filmDetailsComponent.rerender();
+      // в таком варианте работает, но надо использовать ререндер из родителя
       replace(this._filmComponent, oldFilmComponent);
       replace(this._filmDetailsComponent, oldFilmDetailsComponent);
     } else {
+      this._onViewChange();
       render(this._container, this._filmComponent);
     }
   }
@@ -96,7 +92,9 @@ export default class FilmController {
   }
 
   _closeFilmDetails() {
-    remove(this._filmDetailsComponent);
+    // remove(this._filmDetailsComponent);
+
+    this._filmDetailsComponent.getElement().remove();
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
@@ -104,6 +102,7 @@ export default class FilmController {
     this._onViewChange();
     render(this._containerDetails, this._filmDetailsComponent);
     this._displayed = true;
+    // this._filmDetailsComponent.setCloseClickHandler(this._closeFilmDetails);
     document.addEventListener(`keydown`, this._onEscKeyDown);
   }
 }

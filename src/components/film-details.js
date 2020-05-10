@@ -169,9 +169,9 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.setEmojiClickHandler(this._emojiClickHandler);
   }
 
-  rerender() {
-    super.rerender();
-  }
+  // rerender() {
+  //   super.rerender();
+  // }
 
   setCloseClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);

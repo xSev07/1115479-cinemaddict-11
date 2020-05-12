@@ -1,6 +1,7 @@
 import {DISPLAYED_FILMS_IN_MENU, FilterType} from "../const";
 import AbstractComponent from "./abstract-component";
 import {transformToFirstCapitalSymbol} from "../utils/common";
+import AbstractSmartComponent from "./abstract-smart-component";
 
 const createFilterMarkup = (filter) => {
   const {name, count, checked} = filter;
@@ -8,7 +9,7 @@ const createFilterMarkup = (filter) => {
   const isChecked = checked ? `main-navigation__item--active` : ``;
   const countMarkup = count > DISPLAYED_FILMS_IN_MENU ? `` : `<span class="main-navigation__item-count">${count}</span>`;
 
-  return `<a href="#${name}" class="main-navigation__item ${isChecked}">${title}${countMarkup}</a>`;
+  return `<a href="#${name}" class="main-navigation__item ${isChecked}" data-filter-type="${name}">${title}${countMarkup}</a>`;
 };
 
 const createFilterTemplate = (filters) => {
@@ -24,13 +25,29 @@ const createFilterTemplate = (filters) => {
   `);
 };
 
-export default class FilterComponent extends AbstractComponent {
+export default class FilterComponent extends AbstractSmartComponent {
   constructor(filters) {
     super();
     this._filters = filters;
+    this._filterChangeHandler = null;
   }
 
   getTemplate() {
     return createFilterTemplate(this._filters);
+  }
+
+  setFilterChangeHandler(handler) {
+    this._filterChangeHandler = handler;
+    this.getElement().querySelectorAll(`.main-navigation__item`)
+      .forEach((it) => {
+        it.addEventListener(`click`, (evt) => {
+          const filterName = evt.target.dataset.filterType;
+          handler(filterName);
+        });
+      });
+  }
+
+  recoveryListeners() {
+    this.setFilterChangeHandler(this._filterChangeHandler);
   }
 }

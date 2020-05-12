@@ -12,6 +12,7 @@ export default class FilmsController {
     this._container = container;
     this._filmsModel = filmsModel;
     this._showedFilmController = [];
+    this._AdditionalSectionIsRendered = false;
     this._showingFilmsCount = FilmsQuantity.SHOWING_ON_START;
     this._showMoreButtonComponent = new ShowMoreButton();
     this._filmsElement = this._container.getElement();
@@ -24,19 +25,22 @@ export default class FilmsController {
   }
 
   renderFilmsAfterSorting(films, start, finish) {
-    this._films = films;
+    this._filmsModel.setFilms(films);
     this._showingFilmsCount = FilmsQuantity.SHOWING_ON_START;
     this._removeFilms();
     remove(this._showMoreButtonComponent);
     this._renderShowMoreButton();
-    this._renderFilmsCards(this._filmsContainerElement, this._films, start, finish);
+    this._renderFilmsCards(this._filmsContainerElement, this._filmsModel.getFilms(), start, finish);
   }
 
   render() {
     this._renderFilmsCards(this._filmsContainerElement, this._filmsModel.getFilms(), 0, this._showingFilmsCount);
     this._renderShowMoreButton();
-    // this._renderTopRateFilms();
-    // this._renderMostCommentedFilms();
+    if (!this._AdditionalSectionIsRendered) {
+      this._AdditionalSectionIsRendered = true;
+      this._renderTopRateFilms();
+      this._renderMostCommentedFilms();
+    }
   }
 
   _renderFilmsCards(element, array, start = 0, finish = array.length) {
@@ -92,15 +96,6 @@ export default class FilmsController {
       const controllerIndex = this._showedFilmController.findIndex((it) => it.compareFilmData(oldData));
       this._showedFilmController[controllerIndex].render(newData);
     }
-
-    // const index = this._films.findIndex((it) => it === oldData);
-    //
-    // if (index === -1) {
-    //   return;
-    // }
-    // this._films = [].concat(this._films.splice(0, index), newData, this._films.splice(index + 1));
-    // const controllerIndex = this._showedFilmController.findIndex((it) => it.compareFilmData(oldData));
-    // this._showedFilmController[controllerIndex].render(newData);
   }
 
   _onViewChange() {
@@ -118,6 +113,9 @@ export default class FilmsController {
   }
 
   _onFilterChange() {
+    this._showingFilmsCount = FilmsQuantity.SHOWING_ON_START;
     this._updateFilms();
+    remove(this._showMoreButtonComponent);
+    this._renderShowMoreButton();
   }
 }

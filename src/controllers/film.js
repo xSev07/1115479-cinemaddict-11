@@ -45,6 +45,7 @@ export default class FilmController {
     });
 
     if (oldFilmComponent && oldFilmDetailsComponent) {
+      // нужно обновить данные перед ререндером
       // this._filmComponent.rerender();
       // this._filmDetailsComponent.rerender();
       // в таком варианте работает, но надо использовать ререндер из родителя

@@ -39,15 +39,10 @@ export default class PageController {
     }
 
     render(this._siteFooterStatisticsElement, new Statistics(this._films.length));
-
-    // const wl = document.querySelectorAll(`.main-navigation__item`);
-    // wl.forEach((it) => it.addEventListener(`click`, (evt) => {
-    //   evt.preventDefault();
-    //   this._filmsModel.setFilter(FilterType.WATCHLIST);
-    // }));
   }
 
   _onSortTypeChange(sortType) {
+    this._sortComponent.rerender();
     this._sortedFilms = sortFilms(this._films, sortType);
     this._filmsController.renderFilmsAfterSorting(this._sortedFilms, 0, this._showingFilmsCount);
   }

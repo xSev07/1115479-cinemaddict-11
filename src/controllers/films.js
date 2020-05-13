@@ -18,6 +18,7 @@ export default class FilmsController {
     this._filmsElement = this._container.getElement();
     this._filmsContainerElement = container.getElement().querySelector(`.films-list__container`);
     this._onDataChange = this._onDataChange.bind(this);
+    this._onCommentChange = this._onCommentChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
     this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
@@ -45,7 +46,8 @@ export default class FilmsController {
   _renderFilmsCards(element, array, start = 0, finish = array.length, additional = false) {
     const newFilms = array.slice(start, finish)
       .map((film) => {
-        const filmController = new FilmController(element, siteFooterElement, this._onDataChange, this._onViewChange);
+        // const filmController = new FilmController(element, siteFooterElement, this._onDataChange, this._onViewChange);
+        const filmController = new FilmController(element, siteFooterElement, this._getChangeFunctions());
         filmController.render(film);
         return filmController;
       });
@@ -104,9 +106,24 @@ export default class FilmsController {
     }
   }
 
+  _onCommentChange(oldData, newData) {
+    // удаление комментария
+    if (newData === null) {
+
+    }
+  }
+
   _onViewChange() {
     this._showedFilmController.forEach((it) => it.setDefaultView());
     this._showedAdditionalFilmController.forEach((it) => it.setDefaultView());
+  }
+
+  _getChangeFunctions() {
+    return {
+      FILM_DATA: this._onDataChange,
+      COMMENT_DATA: this._onCommentChange,
+      VIEW: this._onViewChange,
+    };
   }
 
   _removeFilms() {

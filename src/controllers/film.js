@@ -11,11 +11,15 @@ export default class FilmController {
    * @param {function} onDataChange функция вызываемая при изменении данных
    * @param {function} onViewChange функция вызываемая при изменении отображения фильма
    */
-  constructor(container, containerDetails, onDataChange, onViewChange) {
+  // constructor(container, containerDetails, onDataChange, onViewChange) {
+  constructor(container, containerDetails, changeFunctions) {
     this._container = container;
     this._containerDetails = containerDetails;
-    this._onDataChange = onDataChange;
-    this._onViewChange = onViewChange;
+    // this._onDataChange = onDataChange;
+    // this._onViewChange = onViewChange;
+    this._onDataChange = changeFunctions.FILM_DATA;
+    this._onCommentChange = changeFunctions.COMMENT_DATA;
+    this._onViewChange = changeFunctions.VIEW;
     this._displayed = false;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
@@ -69,6 +73,8 @@ export default class FilmController {
     remove(this._filmDetailsComponent);
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
+
+  // при изменении комментария вызывать другую функцию(onDataChange)
 
   _onDataUpdate(evt, film, propertyName) {
     evt.preventDefault();

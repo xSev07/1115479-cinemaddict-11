@@ -38,8 +38,8 @@ export default class FilmsController {
     this._renderShowMoreButton();
     if (!this._AdditionalSectionIsRendered) {
       this._AdditionalSectionIsRendered = true;
-      this._renderTopRateFilms();
-      this._renderMostCommentedFilms();
+      // this._renderTopRateFilms();
+      // this._renderMostCommentedFilms();
     }
   }
 

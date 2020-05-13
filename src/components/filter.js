@@ -1,5 +1,4 @@
 import {DISPLAYED_FILMS_IN_MENU, FilterType} from "../const";
-import AbstractComponent from "./abstract-component";
 import {transformToFirstCapitalSymbol} from "../utils/common";
 import AbstractSmartComponent from "./abstract-smart-component";
 
@@ -7,7 +6,7 @@ const createFilterMarkup = (filter) => {
   const {name, count, checked} = filter;
   const title = `${transformToFirstCapitalSymbol(name)} ${name === FilterType.ALL ? `movies` : ``}`;
   const isChecked = checked ? `main-navigation__item--active` : ``;
-  const countMarkup = count > DISPLAYED_FILMS_IN_MENU ? `` : `<span class="main-navigation__item-count">${count}</span>`;
+  const countMarkup = (name !== FilterType.ALL && count <= DISPLAYED_FILMS_IN_MENU) ? `<span class="main-navigation__item-count">${count}</span>` : ``;
 
   return `<a href="#${name}" class="main-navigation__item ${isChecked}" data-filter-type="${name}">${title}${countMarkup}</a>`;
 };

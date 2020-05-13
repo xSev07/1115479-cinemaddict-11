@@ -45,10 +45,6 @@ export default class FilmController {
     });
 
     if (oldFilmComponent && oldFilmDetailsComponent) {
-      // нужно обновить данные перед ререндером
-      // this._filmComponent.rerender();
-      // this._filmDetailsComponent.rerender();
-      // в таком варианте работает, но надо использовать ререндер из родителя
       replace(this._filmComponent, oldFilmComponent);
       replace(this._filmDetailsComponent, oldFilmDetailsComponent);
     } else {
@@ -58,7 +54,7 @@ export default class FilmController {
   }
 
   compareFilmData(filmData) {
-    return this._filmComponent.getFilmData() === filmData;
+    return this._filmComponent.getFilmData().id === filmData.id;
   }
 
   setDefaultView() {

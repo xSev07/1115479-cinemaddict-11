@@ -39,8 +39,8 @@ const createEmojiTemplate = (name) => {
 };
 
 
-const createFilmDetailsTemplate = (film) => {
-  const {title, titleOriginal, poster, age, rating, genres, description, releaseDate, runtime, comments, director, writers, actors, country, watchlist, history, favorites} = film;
+const createFilmDetailsTemplate = (film, comments) => {
+  const {title, titleOriginal, poster, age, rating, genres, description, releaseDate, runtime, director, writers, actors, country, watchlist, history, favorites} = film;
 
   const watchlistTemplate = createFilmControlTemplate(`watchlist`, watchlist);
   const watchedTemplate = createFilmControlTemplate(`watched`, history);
@@ -147,9 +147,10 @@ const createFilmDetailsTemplate = (film) => {
 };
 
 export default class FilmDetails extends AbstractSmartComponent {
-  constructor(film) {
+  constructor(film, comments) {
     super();
     this._film = film;
+    this._comments = comments;
     this._closeClickHandler = null;
     this._watchlistClickHandler = null;
     this._watchedClickHandler = null;
@@ -158,7 +159,7 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createFilmDetailsTemplate(this._film);
+    return createFilmDetailsTemplate(this._film, this._comments);
   }
 
   recoveryListeners() {

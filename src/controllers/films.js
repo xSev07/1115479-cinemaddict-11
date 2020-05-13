@@ -4,6 +4,8 @@ import FilmController from "./film";
 import {AdditionalCategory, FilmsQuantity, SortType} from "../const";
 import ShowMoreButton from "../components/show-more-button";
 import FilmsExtra from "../components/films-extra";
+import {comments} from "../mocks/film";
+import CommentsModel from "../models/comments";
 
 const siteFooterElement = document.querySelector(`.footer`);
 
@@ -11,6 +13,7 @@ export default class FilmsController {
   constructor(container, filmsModel) {
     this._container = container;
     this._filmsModel = filmsModel;
+    this._commentsModel = new CommentsModel(comments);
     this._showedFilmController = [];
     this._showedAdditionalFilmController = [];
     this._showingFilmsCount = FilmsQuantity.SHOWING_ON_START;
@@ -18,7 +21,7 @@ export default class FilmsController {
     this._filmsElement = this._container.getElement();
     this._filmsContainerElement = container.getElement().querySelector(`.films-list__container`);
     this._onDataChange = this._onDataChange.bind(this);
-    this._onCommentChange = this._onCommentChange.bind(this);
+    // this._onCommentChange = this._onCommentChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
     this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
@@ -46,9 +49,9 @@ export default class FilmsController {
   _renderFilmsCards(element, array, start = 0, finish = array.length, additional = false) {
     const newFilms = array.slice(start, finish)
       .map((film) => {
-        // const filmController = new FilmController(element, siteFooterElement, this._onDataChange, this._onViewChange);
-        const filmController = new FilmController(element, siteFooterElement, this._getChangeFunctions());
-        filmController.render(film);
+        const filmController = new FilmController(element, siteFooterElement, this._onDataChange, this._onViewChange);
+        // const filmController = new FilmController(element, siteFooterElement, this._getChangeFunctions());
+        filmController.render(film, this._commentsModel);
         return filmController;
       });
     if (additional) {
@@ -106,12 +109,12 @@ export default class FilmsController {
     }
   }
 
-  _onCommentChange(oldData, newData) {
-    // удаление комментария
-    if (newData === null) {
-
-    }
-  }
+  // _onCommentChange(oldData, newData) {
+  //   // удаление комментария
+  //   if (newData === null) {
+  //
+  //   }
+  // }
 
   _onViewChange() {
     this._showedFilmController.forEach((it) => it.setDefaultView());

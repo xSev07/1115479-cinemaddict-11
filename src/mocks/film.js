@@ -109,10 +109,10 @@ const generateRating = () => {
 const generateRandomArray = (array, min, max) => {
   const count = getRandomIntegerNumber(min, max);
   const copy = array.slice();
-  const res = [];
+  let res = [];
   for (let i = 0; i < count; i++) {
     const index = getRandomIntegerNumber(0, copy.length);
-    res.push(copy.splice(index, 1));
+    res = [].concat(res, copy.splice(index, 1));
   }
   return res;
 };
@@ -136,6 +136,7 @@ const generateHumans = () => {
 
 const generateComment = () => {
   return {
+    id: String(new Date() + Math.random()),
     text: getRandomArrayItem(reviews),
     emoji: getRandomArrayItem(emojis),
     author: getRandomArrayItem(humans),
@@ -144,8 +145,17 @@ const generateComment = () => {
 };
 
 const generateComments = () => {
-  const count = getRandomIntegerNumber(Count.COMMENTS_MIN, Count.COMMENTS_MAX);
-  return Array.from(Array(count), generateComment);
+  // const count = getRandomIntegerNumber(Count.COMMENTS_MIN, Count.COMMENTS_MAX);
+  // return Array.from(Array(count), generateComment);
+  return Array.from(Array(20), generateComment);
+};
+
+const comments = generateComments();
+
+const addCommentsToFilm = () => {
+  const commentForFilm = generateRandomArray(comments, Count.COMMENTS_MIN, Count.COMMENTS_MAX);
+  const commentsIds = [].concat(commentForFilm.map((it) => it.id));
+  return commentsIds;
 };
 
 const generateFilm = () => {
@@ -159,7 +169,8 @@ const generateFilm = () => {
     rating: generateRating(),
     genres: generateGenres(),
     description: generateDescription(),
-    comments: generateComments(),
+    // comments: generateComments(),
+    comments: addCommentsToFilm(),
     director: getRandomArrayItem(humans),
     writers: generateHumans(),
     actors: generateHumans(),
@@ -176,4 +187,4 @@ const generateFilms = (count) => {
   return Array.from(Array(count), generateFilm);
 };
 
-export {generateFilms, generateFilm};
+export {generateFilms, generateFilm, comments};

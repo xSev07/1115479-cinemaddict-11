@@ -13,7 +13,7 @@ export default class FilmsController {
   constructor(container, filmsModel) {
     this._container = container;
     this._filmsModel = filmsModel;
-    this._commentsModel = new CommentsModel(comments);
+    this._commentsModel = new CommentsModel(comments, this._onCommentChange);
     this._showedFilmController = [];
     this._showedAdditionalFilmController = [];
     this._showingFilmsCount = FilmsQuantity.SHOWING_ON_START;
@@ -21,11 +21,12 @@ export default class FilmsController {
     this._filmsElement = this._container.getElement();
     this._filmsContainerElement = container.getElement().querySelector(`.films-list__container`);
     this._onDataChange = this._onDataChange.bind(this);
-    // this._onCommentChange = this._onCommentChange.bind(this);
+    this._onCommentChange = this._onCommentChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
     this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);
+    // this._commentsModel.setDataChangeHandler(this._onCommentChange);
   }
 
   renderFilmsAfterSorting(films, start, finish) {
@@ -99,6 +100,7 @@ export default class FilmsController {
   }
 
   _onDataChange(oldData, newData) {
+    debugger
     const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
     if (isSuccess) {
       const controllerIndex = this._showedFilmController.findIndex((it) => it.compareFilmData(oldData));
@@ -109,12 +111,11 @@ export default class FilmsController {
     }
   }
 
-  // _onCommentChange(oldData, newData) {
-  //   // удаление комментария
-  //   if (newData === null) {
-  //
-  //   }
-  // }
+  _onCommentChange(commentId) {
+    debugger
+    // здесь this привязан к commentsModel почему-то
+    this._filmsModel.removeComment(commentId);
+  }
 
   _onViewChange() {
     this._showedFilmController.forEach((it) => it.setDefaultView());

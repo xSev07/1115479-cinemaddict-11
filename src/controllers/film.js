@@ -52,6 +52,22 @@ export default class FilmController {
       selectedEmojiElement.innerHTML = `<img src="images/emoji/${selectedEmoji}.png" width="55" height="55" alt="emoji-${selectedEmoji}">`;
     });
 
+    this._filmDetailsComponent.setDeleteButtonsClickHandler((evt) => {
+      evt.preventDefault();
+      const commentId = this._filmDetailsComponent.getCommentIdByEvent(evt);
+      // debugger
+      const isSuccess = this._commentsModel.removeComment(commentId);
+      if (isSuccess) {
+        // я удалил комментарий из модели. Теперь мне надо удалить этот комментарий из данных фильма, после чего обновить отображение
+        console.log(`comment delete`);
+        // this._onCommentChange(commentId);
+
+
+        // this._onDataChange(film, Object.assign({}, film, {}));
+        // this._onDataChange(film, Object.assign({}, film, {[propertyName]: !film[propertyName]}))
+      }
+    });
+
     if (oldFilmComponent && oldFilmDetailsComponent) {
       replace(this._filmComponent, oldFilmComponent);
       replace(this._filmDetailsComponent, oldFilmDetailsComponent);
@@ -85,6 +101,13 @@ export default class FilmController {
     this._onDataChange(film, Object.assign({}, film, {[propertyName]: !film[propertyName]}));
   }
 
+  // _onCommentChange(oldData, newData) {
+  //   // удаление комментария
+  //   if (newData === null) {
+  //
+  //   }
+  // }
+
   _setStatusClickHandlers(component, film) {
     component.setWatchlistClickHandler((evt) => this._onDataUpdate(evt, film, `watchlist`));
     component.setWatchedClickHandler((evt) => this._onDataUpdate(evt, film, `history`));
@@ -99,8 +122,6 @@ export default class FilmController {
   }
 
   _closeFilmDetails() {
-    // remove(this._filmDetailsComponent);
-
     this._filmDetailsComponent.getElement().remove();
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }

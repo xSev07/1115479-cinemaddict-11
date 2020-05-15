@@ -3,10 +3,10 @@ import {getFormatedCommentDate, getFormatedDate} from "../utils/common";
 import AbstractSmartComponent from "./abstract-smart-component";
 
 const createCommentTemplate = (comment) => {
-  const {text, emoji, author, date} = comment;
+  const {id, text, emoji, author, date} = comment;
 
   return (`
-    <li class="film-details__comment">
+    <li class="film-details__comment" data-comment-id="${id}">
       <span class="film-details__comment-emoji">
         <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">
       </span>
@@ -156,10 +156,19 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._watchedClickHandler = null;
     this._favoriteClickHandler = null;
     this._emojiClickHandler = null;
+
+    this._deleteButtonsClickHandler = null;
   }
 
   getTemplate() {
     return createFilmDetailsTemplate(this._film, this._comments);
+  }
+
+  getCommentIdByEvent(evt) {
+    const index = evt.path.findIndex((it) => it.className === `film-details__comment`);
+    const elem = evt.path[index];
+    const id = elem.dataset.commentId;
+    return id;
   }
 
   recoveryListeners() {
@@ -168,11 +177,8 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.setWatchedClickHandler(this._watchedClickHandler);
     this.setFavoriteClickHandler(this._favoriteClickHandler);
     this.setEmojiClickHandler(this._emojiClickHandler);
+    this.setDeleteButtonsClickHandler(this._deleteButtonsClickHandler);
   }
-
-  // rerender() {
-  //   super.rerender();
-  // }
 
   setCloseClickHandler(handler) {
     this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
@@ -197,5 +203,11 @@ export default class FilmDetails extends AbstractSmartComponent {
   setEmojiClickHandler(handler) {
     this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`click`, handler);
     this._emojiClickHandler = handler;
+  }
+
+  setDeleteButtonsClickHandler(handler) {
+    this.getElement().querySelectorAll(`.film-details__comment-delete`)
+      .forEach((it) => it.addEventListener(`click`, handler));
+    this._deleteButtonsClickHandler = handler;
   }
 }

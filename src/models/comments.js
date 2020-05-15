@@ -1,6 +1,7 @@
 export default class CommentsModel {
-  constructor(comments) {
+  constructor(comments, onDataChange) {
     this._comments = comments;
+    this._onDataChange = onDataChange;
 
     this._dataChangeHandlers = [];
   }
@@ -12,5 +13,31 @@ export default class CommentsModel {
   getComment(id) {
     const index = this._comments.findIndex((it) => it.id === id);
     return this._comments[index];
+  }
+
+  removeComment(id) {
+    const index = this._comments.findIndex((it) => it.id === id);
+
+    if (index === -1) {
+      return false;
+    }
+
+    this._comments = [].concat(this._comments.slice(0, index), this._comments.slice(index + 1));
+    // this._callHandlers(this._dataChangeHandlers);
+    this._onDataChange(id);
+    return true;
+  }
+
+  addComment(comment) {
+    this._comments = [].concat(comment, this._comments);
+    this._callHandlers(this._dataChangeHandlers);
+  }
+
+  setDataChangeHandler(handler) {
+    this._dataChangeHandlers.push(handler);
+  }
+
+  _callHandlers(handlers) {
+    handlers.forEach((handler) => handler());
   }
 }

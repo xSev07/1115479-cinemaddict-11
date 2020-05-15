@@ -23,23 +23,13 @@ export default class FilmsModel {
     return this._films;
   }
 
-  // removeFilm(id) {
-  //   const index = this._films.findIndex((it) => it.id === id);
-  //
-  //   if (index === -1) {
-  //     return false;
-  //   }
-  //
-  //   this._films = [].concat(this._films.slice(0, index), this._films.slice(index + 1));
-  //   this._callHandlers(this._dataChangeHandlers);
-  //
-  //   return true;
-  // }
-
-  // addFilm(film) {
-  //   this._films = [].concat(film, this._films);
-  //   this._callHandlers(this._dataChangeHandlers);
-  // }
+  removeComment(id) {
+    this._films.forEach((film) => {
+      const index = film.comments.findIndex((comment) => comment.id === id);
+      film.comments = [].concat(film.comments.slice(0, index), film.comments.slice(index + 1));
+    });
+    this._callHandlers(this._dataChangeHandlers);
+  }
 
   setFilter(filterType) {
     if (this._activeFilterType === filterType) {

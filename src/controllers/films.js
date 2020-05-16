@@ -13,7 +13,6 @@ export default class FilmsController {
   constructor(container, filmsModel) {
     this._container = container;
     this._filmsModel = filmsModel;
-    this._commentsModel = new CommentsModel(comments, this._onCommentChange);
     this._showedFilmController = [];
     this._showedAdditionalFilmController = [];
     this._showingFilmsCount = FilmsQuantity.SHOWING_ON_START;
@@ -26,6 +25,7 @@ export default class FilmsController {
     this._onFilterChange = this._onFilterChange.bind(this);
     this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);
+    this._commentsModel = new CommentsModel(comments, this._onCommentChange);
     // this._commentsModel.setDataChangeHandler(this._onCommentChange);
   }
 
@@ -100,21 +100,23 @@ export default class FilmsController {
   }
 
   _onDataChange(oldData, newData) {
-    debugger
     const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
     if (isSuccess) {
       const controllerIndex = this._showedFilmController.findIndex((it) => it.compareFilmData(oldData));
       this._showedFilmController[controllerIndex].render(newData);
 
       const controllerAdditionalIndex = this._showedAdditionalFilmController.findIndex((it) => it.compareFilmData(oldData));
-      this._showedAdditionalFilmController[controllerAdditionalIndex].render(newData);
+      if (controllerAdditionalIndex !== -1) {
+        this._showedAdditionalFilmController[controllerAdditionalIndex].render(newData);
+      }
     }
   }
 
   _onCommentChange(commentId) {
-    debugger
-    // здесь this привязан к commentsModel почему-то
-    this._filmsModel.removeComment(commentId);
+    // инвертированная логика?
+    // Если есть id, то удалить, если нет - то добавить комментарий и id
+    const newFilm = this._filmsModel.removeComment(commentId);
+    this._onDataChange({id: newFilm.id}, newFilm);
   }
 
   _onViewChange() {

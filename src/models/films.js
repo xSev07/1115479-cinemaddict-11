@@ -24,11 +24,16 @@ export default class FilmsModel {
   }
 
   removeComment(id) {
+    let newFilm = null;
     this._films.forEach((film) => {
-      const index = film.comments.findIndex((comment) => comment.id === id);
-      film.comments = [].concat(film.comments.slice(0, index), film.comments.slice(index + 1));
+      const index = film.comments.findIndex((comment) => comment === id);
+      if (index !== -1) {
+        film.comments = [].concat(film.comments.slice(0, index), film.comments.slice(index + 1));
+        newFilm = film;
+      }
     });
-    this._callHandlers(this._dataChangeHandlers);
+    // this._callHandlers(this._dataChangeHandlers);
+    return newFilm;
   }
 
   setFilter(filterType) {

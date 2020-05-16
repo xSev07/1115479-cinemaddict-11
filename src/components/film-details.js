@@ -146,6 +146,8 @@ const createFilmDetailsTemplate = (film, comments) => {
   `);
 };
 
+
+
 export default class FilmDetails extends AbstractSmartComponent {
   constructor(film, comments) {
     super();
@@ -209,5 +211,24 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.getElement().querySelectorAll(`.film-details__comment-delete`)
       .forEach((it) => it.addEventListener(`click`, handler));
     this._deleteButtonsClickHandler = handler;
+  }
+
+  _parseData() {
+    const result = {
+      text: ``,
+      emoji: null,
+      date: new Date(),
+    };
+    const newCommentElement = this.getElement().querySelector(`.film-details__new-comment`);
+    const commentTextElement = newCommentElement.querySelector(`.film-details__comment-input`);
+    const allEmojis = newCommentElement.querySelectorAll(`.film-details__emoji-item`);
+    result.text = commentTextElement.value;
+    allEmojis.forEach((it) => {
+      if (it.checked) {
+        result.emoji = it.value;
+      }
+    });
+
+    console.log(result);
   }
 }

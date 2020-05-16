@@ -106,9 +106,9 @@ const generateRating = () => {
   return (Math.random() * 10).toFixed(1);
 };
 
-const generateRandomArray = (array, min, max) => {
+const generateRandomArray = (array, min, max, needCopyArray = true) => {
   const count = getRandomIntegerNumber(min, max);
-  const copy = array.slice();
+  const copy = needCopyArray ? array.slice() : array;
   let res = [];
   for (let i = 0; i < count; i++) {
     const index = getRandomIntegerNumber(0, copy.length);
@@ -147,13 +147,14 @@ const generateComment = () => {
 const generateComments = () => {
   // const count = getRandomIntegerNumber(Count.COMMENTS_MIN, Count.COMMENTS_MAX);
   // return Array.from(Array(count), generateComment);
-  return Array.from(Array(20), generateComment);
+  return Array.from(Array(80), generateComment);
 };
 
 const comments = generateComments();
+const commentsCopy = comments.slice();
 
 const addCommentsToFilm = () => {
-  const commentForFilm = generateRandomArray(comments, Count.COMMENTS_MIN, Count.COMMENTS_MAX);
+  const commentForFilm = generateRandomArray(commentsCopy, Count.COMMENTS_MIN, Count.COMMENTS_MAX, false);
   const commentsIds = [].concat(commentForFilm.map((it) => it.id));
   return commentsIds;
 };

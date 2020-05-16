@@ -35,7 +35,7 @@ export default class FilmController {
     this._filmComponent.setOpenClickHandler(this._openFilmDetails);
     this._setStatusClickHandlers(this._filmComponent, film);
 
-    this._commentsModel = commentsModel;
+    this._commentsModel = commentsModel || this._commentsModel;
     const comments = film.comments.map((it) => this._commentsModel.getComment(it));
 
     this._filmDetailsComponent = new FilmDetails(film, comments);
@@ -50,6 +50,8 @@ export default class FilmController {
 
       const selectedEmojiElement = this._filmDetailsComponent.getElement().querySelector(`.film-details__add-emoji-label`);
       selectedEmojiElement.innerHTML = `<img src="images/emoji/${selectedEmoji}.png" width="55" height="55" alt="emoji-${selectedEmoji}">`;
+
+      this._filmDetailsComponent._parseData();
     });
 
     this._filmDetailsComponent.setDeleteButtonsClickHandler((evt) => {
@@ -66,6 +68,7 @@ export default class FilmController {
         // this._onDataChange(film, Object.assign({}, film, {}));
         // this._onDataChange(film, Object.assign({}, film, {[propertyName]: !film[propertyName]}))
       }
+
     });
 
     if (oldFilmComponent && oldFilmDetailsComponent) {

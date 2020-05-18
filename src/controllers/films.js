@@ -50,8 +50,8 @@ export default class FilmsController {
   _renderFilmsCards(element, array, start = 0, finish = array.length, additional = false) {
     const newFilms = array.slice(start, finish)
       .map((film) => {
-        const filmController = new FilmController(element, siteFooterElement, this._onDataChange, this._onViewChange);
-        // const filmController = new FilmController(element, siteFooterElement, this._getChangeFunctions());
+        // const filmController = new FilmController(element, siteFooterElement, this._onDataChange, this._onViewChange);
+        const filmController = new FilmController(element, siteFooterElement, this._getChangeFunctions());
         filmController.render(film, this._commentsModel);
         return filmController;
       });
@@ -112,16 +112,19 @@ export default class FilmsController {
     }
   }
 
-  _onCommentChange(commentId) {
+  _onCommentChange(comment, film) {
     // инвертированная логика?
     // Если есть id, то удалить, если нет - то добавить комментарий и id
     debugger
-    if (!commentId) {
-
+    let newFilm;
+    if (!comment.id) {
+      // добавить комментарий в модель и перерисовать карточки
+      this._commentsModel.addComment(comment);
+      newFilm = this._filmsModel.addComment(film.id, comment.id);
     } else {
-      const newFilm = this._filmsModel.removeComment(commentId);
-      this._onDataChange({id: newFilm.id}, newFilm);
+      newFilm = this._filmsModel.removeComment(comment.id);
     }
+    this._onDataChange({id: newFilm.id}, newFilm);
   }
 
   _onViewChange() {

@@ -22,11 +22,14 @@ export default class CommentsModel {
       throw new Error(`Comment not finding. id: ${id}`);
     }
 
+    const deletedComment = this._comments[index];
+
     this._comments = [].concat(this._comments.slice(0, index), this._comments.slice(index + 1));
-    this._onDataChange(id);
+    this._onDataChange(deletedComment);
   }
 
   addComment(comment) {
+    comment.id = Math.random();
     this._comments = [].concat(comment, this._comments);
     this._callHandlers(this._dataChangeHandlers);
   }

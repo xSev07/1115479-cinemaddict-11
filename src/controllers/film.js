@@ -12,15 +12,15 @@ export default class FilmController {
    * @param {function} onDataChange функция вызываемая при изменении данных
    * @param {function} onViewChange функция вызываемая при изменении отображения фильма
    */
-  constructor(container, containerDetails, onDataChange, onViewChange) {
-  // constructor(container, containerDetails, changeFunctions) {
+  // constructor(container, containerDetails, onDataChange, onViewChange) {
+  constructor(container, containerDetails, changeFunctions) {
     this._container = container;
     this._containerDetails = containerDetails;
-    this._onDataChange = onDataChange;
-    this._onViewChange = onViewChange;
-    // this._onDataChange = changeFunctions.FILM_DATA;
-    // this._onCommentChange = changeFunctions.COMMENT_DATA;
-    // this._onViewChange = changeFunctions.VIEW;
+    // this._onDataChange = onDataChange;
+    // this._onViewChange = onViewChange;
+    this._onDataChange = changeFunctions.FILM_DATA;
+    this._onCommentChange = changeFunctions.COMMENT_DATA;
+    this._onViewChange = changeFunctions.VIEW;
     this._displayed = false;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
@@ -29,6 +29,7 @@ export default class FilmController {
   }
 
   render(film, commentsModel) {
+    this._film = film;
     const oldFilmComponent = this._filmComponent;
     const oldFilmDetailsComponent = this._filmDetailsComponent;
 
@@ -53,8 +54,6 @@ export default class FilmController {
 
       const selectedEmojiElement = this._filmDetailsComponent.getElement().querySelector(`.film-details__add-emoji-label`);
       selectedEmojiElement.innerHTML = `<img src="images/emoji/${selectedEmoji}.png" width="55" height="55" alt="emoji-${selectedEmoji}">`;
-
-      this._filmDetailsComponent._parseData();
     });
 
     // обработчика клика удаления комментария
@@ -67,7 +66,10 @@ export default class FilmController {
     // обработчик отправки
     this._filmDetailsComponent.setCommentSubmitHandler((evt) => {
       if (evt.ctrlKey && evt.keyCode === KeyCode.ENTER) {
-        console.log(`1`)
+        // const
+        const newComment = this._filmDetailsComponent.getNewCommentData();
+        this._onCommentChange(newComment, this._film);
+        // this._onDataChange(this._film, newFilm);
       }
     });
 

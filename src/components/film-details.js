@@ -223,7 +223,8 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   getNewCommentData() {
     const comment = this._parseData();
-    comment.text = comment.text; // нужно сделать безопасный ввод
+    // comment.id = Math.random();
+    // comment.text = comment.text; // нужно сделать безопасный ввод
     return comment;
   }
 

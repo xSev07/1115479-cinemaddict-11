@@ -36,6 +36,13 @@ export default class FilmsModel {
     return newFilm;
   }
 
+  addComment(filmId, commentId) {
+    const index = this._films.findIndex((film) => film.id === filmId);
+    const film = this._films[index];
+    film.comments.push(commentId);
+    return film;
+  }
+
   setFilter(filterType) {
     if (this._activeFilterType === filterType) {
       return;

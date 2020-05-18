@@ -118,6 +118,7 @@ export default class FilmController {
   }
 
   _closeFilmDetails() {
+    this._filmDetailsComponent.clearNewComment();
     this._filmDetailsComponent.getElement().remove();
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }

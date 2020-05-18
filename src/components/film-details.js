@@ -223,9 +223,17 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   getNewCommentData() {
     const comment = this._parseData();
-    // comment.id = Math.random();
     // comment.text = comment.text; // нужно сделать безопасный ввод
     return comment;
+  }
+
+  clearNewComment() {
+    const element = this.getElement();
+    element.querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
+    element.querySelector(`.film-details__comment-input`).value = ``;
+    element.querySelectorAll(`.film-details__emoji-item`).forEach((it) => {
+      it.checked = false;
+    });
   }
 
   _parseData() {

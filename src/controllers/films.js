@@ -115,8 +115,13 @@ export default class FilmsController {
   _onCommentChange(commentId) {
     // инвертированная логика?
     // Если есть id, то удалить, если нет - то добавить комментарий и id
-    const newFilm = this._filmsModel.removeComment(commentId);
-    this._onDataChange({id: newFilm.id}, newFilm);
+    debugger
+    if (!commentId) {
+
+    } else {
+      const newFilm = this._filmsModel.removeComment(commentId);
+      this._onDataChange({id: newFilm.id}, newFilm);
+    }
   }
 
   _onViewChange() {

@@ -19,13 +19,11 @@ export default class CommentsModel {
     const index = this._comments.findIndex((it) => it.id === id);
 
     if (index === -1) {
-      return false;
+      throw new Error(`Comment not finding. id: ${id}`);
     }
 
     this._comments = [].concat(this._comments.slice(0, index), this._comments.slice(index + 1));
-    // this._callHandlers(this._dataChangeHandlers);
     this._onDataChange(id);
-    return true;
   }
 
   addComment(comment) {

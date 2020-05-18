@@ -1,6 +1,7 @@
 import {remove, render, replace} from "../utils/render";
 import FilmCard from "../components/film-card";
 import FilmDetails from "../components/film-details";
+import {KeyCode} from "../const";
 
 export default class FilmController {
   /**
@@ -41,6 +42,8 @@ export default class FilmController {
     this._filmDetailsComponent = new FilmDetails(film, comments);
     this._filmDetailsComponent.setCloseClickHandler(this._closeFilmDetails);
     this._setStatusClickHandlers(this._filmDetailsComponent, film);
+
+    // обработчик клика по эмоджи
     this._filmDetailsComponent.setEmojiClickHandler((evt) => {
       if (evt.target.tagName !== `IMG`) {
         return;
@@ -54,21 +57,18 @@ export default class FilmController {
       this._filmDetailsComponent._parseData();
     });
 
+    // обработчика клика удаления комментария
     this._filmDetailsComponent.setDeleteButtonsClickHandler((evt) => {
       evt.preventDefault();
       const commentId = this._filmDetailsComponent.getCommentIdByEvent(evt);
-      // debugger
-      const isSuccess = this._commentsModel.removeComment(commentId);
-      if (isSuccess) {
-        // я удалил комментарий из модели. Теперь мне надо удалить этот комментарий из данных фильма, после чего обновить отображение
-        console.log(`comment delete`);
-        // this._onCommentChange(commentId);
+      this._commentsModel.removeComment(commentId);
+    });
 
-
-        // this._onDataChange(film, Object.assign({}, film, {}));
-        // this._onDataChange(film, Object.assign({}, film, {[propertyName]: !film[propertyName]}))
+    // обработчик отправки
+    this._filmDetailsComponent.setCommentSubmitHandler((evt) => {
+      if (evt.ctrlKey && evt.keyCode === KeyCode.ENTER) {
+        console.log(`1`)
       }
-
     });
 
     if (oldFilmComponent && oldFilmDetailsComponent) {
@@ -97,19 +97,10 @@ export default class FilmController {
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
-  // при изменении комментария вызывать другую функцию(onDataChange)
-
   _onDataUpdate(evt, film, propertyName) {
     evt.preventDefault();
     this._onDataChange(film, Object.assign({}, film, {[propertyName]: !film[propertyName]}));
   }
-
-  // _onCommentChange(oldData, newData) {
-  //   // удаление комментария
-  //   if (newData === null) {
-  //
-  //   }
-  // }
 
   _setStatusClickHandlers(component, film) {
     component.setWatchlistClickHandler((evt) => this._onDataUpdate(evt, film, `watchlist`));
@@ -133,7 +124,6 @@ export default class FilmController {
     this._onViewChange();
     render(this._containerDetails, this._filmDetailsComponent);
     this._displayed = true;
-    // this._filmDetailsComponent.setCloseClickHandler(this._closeFilmDetails);
     document.addEventListener(`keydown`, this._onEscKeyDown);
   }
 }

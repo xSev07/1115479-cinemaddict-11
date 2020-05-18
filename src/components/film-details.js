@@ -158,6 +158,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._watchedClickHandler = null;
     this._favoriteClickHandler = null;
     this._emojiClickHandler = null;
+    this._commentSubmitHandler = null;
 
     this._deleteButtonsClickHandler = null;
   }
@@ -180,6 +181,7 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.setFavoriteClickHandler(this._favoriteClickHandler);
     this.setEmojiClickHandler(this._emojiClickHandler);
     this.setDeleteButtonsClickHandler(this._deleteButtonsClickHandler);
+    this.setCommentSubmitHandler(this._commentSubmitHandler);
   }
 
   setCloseClickHandler(handler) {
@@ -213,6 +215,18 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._deleteButtonsClickHandler = handler;
   }
 
+  setCommentSubmitHandler(handler) {
+    this.getElement().querySelector(`.film-details__comment-input`)
+      .addEventListener(`keydown`, handler);
+    this._commentSubmitHandler = handler;
+  }
+
+  getNewCommentData() {
+    const comment = this._parseData();
+    comment.text = comment.text; // нужно сделать безопасный ввод
+    return comment;
+  }
+
   _parseData() {
     const result = {
       text: ``,
@@ -229,6 +243,6 @@ export default class FilmDetails extends AbstractSmartComponent {
       }
     });
 
-    console.log(result);
+    return result;
   }
 }

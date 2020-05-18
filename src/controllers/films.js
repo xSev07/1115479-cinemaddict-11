@@ -113,12 +113,8 @@ export default class FilmsController {
   }
 
   _onCommentChange(comment, film) {
-    // инвертированная логика?
-    // Если есть id, то удалить, если нет - то добавить комментарий и id
-    debugger
     let newFilm;
     if (!comment.id) {
-      // добавить комментарий в модель и перерисовать карточки
       this._commentsModel.addComment(comment);
       newFilm = this._filmsModel.addComment(film.id, comment.id);
     } else {

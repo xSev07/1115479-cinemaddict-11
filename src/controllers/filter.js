@@ -1,7 +1,7 @@
 import {FilterType} from "../const";
-import {remove, render, replace} from "../utils/render";
+import {render, replace} from "../utils/render";
 import FilterComponent from "../components/filter";
-import {getAllFilters, getFilmsByFilter} from "../utils/filter";
+import {getFilmsByFilter} from "../utils/filter";
 
 export default class FilterController {
   constructor(container, filmsModel) {

@@ -50,4 +50,4 @@ export const isFavoritesFilm = (film) => {
 
 export const transformToFirstCapitalSymbol = (str) => {
   return `${str[0].toUpperCase()}${str.slice(1)}`;
-}
+};

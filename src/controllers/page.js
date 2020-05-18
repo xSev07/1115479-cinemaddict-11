@@ -1,4 +1,4 @@
-import {FilmsQuantity, FilterType} from "../const";
+import {FilmsQuantity} from "../const";
 import {render} from "../utils/render";
 import {sortFilms} from "../utils/common";
 import Profile from "../components/profile";

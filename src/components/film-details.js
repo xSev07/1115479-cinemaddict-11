@@ -1,9 +1,12 @@
 import {emojis} from "../const";
 import {getFormatedCommentDate, getFormatedDate} from "../utils/common";
 import AbstractSmartComponent from "./abstract-smart-component";
+import {encode} from "he";
 
 const createCommentTemplate = (comment) => {
-  const {id, text, emoji, author, date} = comment;
+  const {id, text: notSanitizedText, emoji, author: notSanitizedAuthor, date} = comment;
+  const text = encode(notSanitizedText);
+  const author = encode(notSanitizedAuthor);
 
   return (`
     <li class="film-details__comment" data-comment-id="${id}">
@@ -146,8 +149,6 @@ const createFilmDetailsTemplate = (film, comments) => {
   `);
 };
 
-
-
 export default class FilmDetails extends AbstractSmartComponent {
   constructor(film, comments) {
     super();
@@ -223,7 +224,8 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   getNewCommentData() {
     const comment = this._parseData();
-    // comment.text = comment.text; // нужно сделать безопасный ввод
+    comment.text = encode(comment.text);
+    comment.author = `Movie Buff`;
     return comment;
   }
 

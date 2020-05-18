@@ -43,4 +43,4 @@ export const FilterType = {
 
 export const KeyCode = {
   ENTER: 13,
-}
+};

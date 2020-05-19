@@ -210,6 +210,17 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._emojiClickHandler = handler;
   }
 
+  setEmoji(evt) {
+    if (evt.target.tagName !== `IMG`) {
+      return;
+    }
+
+    const selectedEmoji = evt.target.dataset.emojiName;
+
+    const selectedEmojiElement = this.getElement().querySelector(`.film-details__add-emoji-label`);
+    selectedEmojiElement.innerHTML = `<img src="images/emoji/${selectedEmoji}.png" width="55" height="55" alt="emoji-${selectedEmoji}">`;
+  }
+
   setDeleteButtonsClickHandler(handler) {
     this.getElement().querySelectorAll(`.film-details__comment-delete`)
       .forEach((it) => it.addEventListener(`click`, handler));

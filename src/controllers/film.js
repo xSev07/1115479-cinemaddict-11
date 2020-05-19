@@ -87,14 +87,7 @@ export default class FilmController {
 
   _onEmojiClick() {
     this._filmDetailsComponent.setEmojiClickHandler((evt) => {
-      if (evt.target.tagName !== `IMG`) {
-        return;
-      }
-
-      const selectedEmoji = evt.target.dataset.emojiName;
-
-      const selectedEmojiElement = this._filmDetailsComponent.getElement().querySelector(`.film-details__add-emoji-label`);
-      selectedEmojiElement.innerHTML = `<img src="images/emoji/${selectedEmoji}.png" width="55" height="55" alt="emoji-${selectedEmoji}">`;
+      this._filmDetailsComponent.setEmoji(evt);
     });
   }
 

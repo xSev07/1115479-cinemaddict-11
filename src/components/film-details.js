@@ -169,8 +169,10 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   getCommentIdByEvent(evt) {
-    const index = evt.path.findIndex((it) => it.className === `film-details__comment`);
-    const elem = evt.path[index];
+    const path = evt.path || (evt.composedPath && evt.composedPath());
+
+    const index = path.findIndex((it) => it.className === `film-details__comment`);
+    const elem = path[index];
     const id = elem.dataset.commentId;
     return id;
   }

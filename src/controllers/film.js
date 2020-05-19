@@ -43,35 +43,9 @@ export default class FilmController {
     this._filmDetailsComponent = new FilmDetails(film, comments);
     this._filmDetailsComponent.setCloseClickHandler(this._closeFilmDetails);
     this._setStatusClickHandlers(this._filmDetailsComponent, film);
-
-    // обработчик клика по эмоджи
-    this._filmDetailsComponent.setEmojiClickHandler((evt) => {
-      if (evt.target.tagName !== `IMG`) {
-        return;
-      }
-
-      const selectedEmoji = evt.target.dataset.emojiName;
-
-      const selectedEmojiElement = this._filmDetailsComponent.getElement().querySelector(`.film-details__add-emoji-label`);
-      selectedEmojiElement.innerHTML = `<img src="images/emoji/${selectedEmoji}.png" width="55" height="55" alt="emoji-${selectedEmoji}">`;
-    });
-
-    // обработчика клика удаления комментария
-    this._filmDetailsComponent.setDeleteButtonsClickHandler((evt) => {
-      evt.preventDefault();
-      const commentId = this._filmDetailsComponent.getCommentIdByEvent(evt);
-      this._commentsModel.removeComment(commentId);
-    });
-
-    // обработчик отправки
-    this._filmDetailsComponent.setCommentSubmitHandler((evt) => {
-      if (evt.ctrlKey && evt.keyCode === KeyCode.ENTER) {
-        // const
-        const newComment = this._filmDetailsComponent.getNewCommentData();
-        this._onCommentChange(newComment, this._film);
-        // this._onDataChange(this._film, newFilm);
-      }
-    });
+    this._onEmojiClick();
+    this._onCommentDelete();
+    this._onCommentSubmit();
 
     if (oldFilmComponent && oldFilmDetailsComponent) {
       replace(this._filmComponent, oldFilmComponent);
@@ -108,6 +82,36 @@ export default class FilmController {
     component.setWatchlistClickHandler((evt) => this._onDataUpdate(evt, film, `watchlist`));
     component.setWatchedClickHandler((evt) => this._onDataUpdate(evt, film, `history`));
     component.setFavoriteClickHandler((evt) => this._onDataUpdate(evt, film, `favorites`));
+  }
+
+  _onEmojiClick() {
+    this._filmDetailsComponent.setEmojiClickHandler((evt) => {
+      if (evt.target.tagName !== `IMG`) {
+        return;
+      }
+
+      const selectedEmoji = evt.target.dataset.emojiName;
+
+      const selectedEmojiElement = this._filmDetailsComponent.getElement().querySelector(`.film-details__add-emoji-label`);
+      selectedEmojiElement.innerHTML = `<img src="images/emoji/${selectedEmoji}.png" width="55" height="55" alt="emoji-${selectedEmoji}">`;
+    });
+  }
+
+  _onCommentSubmit() {
+    this._filmDetailsComponent.setCommentSubmitHandler((evt) => {
+      if (evt.ctrlKey && evt.keyCode === KeyCode.ENTER) {
+        const newComment = this._filmDetailsComponent.getNewCommentData();
+        this._onCommentChange(newComment, this._film);
+      }
+    });
+  }
+
+  _onCommentDelete() {
+    this._filmDetailsComponent.setDeleteButtonsClickHandler((evt) => {
+      evt.preventDefault();
+      const commentId = this._filmDetailsComponent.getCommentIdByEvent(evt);
+      this._commentsModel.removeComment(commentId);
+    });
   }
 
   _onEscKeyDown(evt) {

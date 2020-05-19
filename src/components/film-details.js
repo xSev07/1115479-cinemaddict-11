@@ -1,12 +1,15 @@
 import {emojis} from "../const";
 import {getFormatedCommentDate, getFormatedDate} from "../utils/common";
 import AbstractSmartComponent from "./abstract-smart-component";
+import {encode} from "he";
 
 const createCommentTemplate = (comment) => {
-  const {text, emoji, author, date} = comment;
+  const {id, text: notSanitizedText, emoji, author: notSanitizedAuthor, date} = comment;
+  const text = encode(notSanitizedText);
+  const author = encode(notSanitizedAuthor);
 
   return (`
-    <li class="film-details__comment">
+    <li class="film-details__comment" data-comment-id="${id}">
       <span class="film-details__comment-emoji">
         <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">
       </span>
@@ -39,8 +42,8 @@ const createEmojiTemplate = (name) => {
 };
 
 
-const createFilmDetailsTemplate = (film) => {
-  const {title, titleOriginal, poster, age, rating, genres, description, releaseDate, runtime, comments, director, writers, actors, country, watchlist, history, favorites} = film;
+const createFilmDetailsTemplate = (film, comments) => {
+  const {title, titleOriginal, poster, age, rating, genres, description, releaseDate, runtime, director, writers, actors, country, watchlist, history, favorites} = film;
 
   const watchlistTemplate = createFilmControlTemplate(`watchlist`, watchlist);
   const watchedTemplate = createFilmControlTemplate(`watched`, history);
@@ -147,18 +150,29 @@ const createFilmDetailsTemplate = (film) => {
 };
 
 export default class FilmDetails extends AbstractSmartComponent {
-  constructor(film) {
+  constructor(film, comments) {
     super();
     this._film = film;
+    this._comments = comments;
     this._closeClickHandler = null;
     this._watchlistClickHandler = null;
     this._watchedClickHandler = null;
     this._favoriteClickHandler = null;
     this._emojiClickHandler = null;
+    this._commentSubmitHandler = null;
+
+    this._deleteButtonsClickHandler = null;
   }
 
   getTemplate() {
-    return createFilmDetailsTemplate(this._film);
+    return createFilmDetailsTemplate(this._film, this._comments);
+  }
+
+  getCommentIdByEvent(evt) {
+    const index = evt.path.findIndex((it) => it.className === `film-details__comment`);
+    const elem = evt.path[index];
+    const id = elem.dataset.commentId;
+    return id;
   }
 
   recoveryListeners() {
@@ -167,10 +181,8 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.setWatchedClickHandler(this._watchedClickHandler);
     this.setFavoriteClickHandler(this._favoriteClickHandler);
     this.setEmojiClickHandler(this._emojiClickHandler);
-  }
-
-  rerender() {
-    super.rerender();
+    this.setDeleteButtonsClickHandler(this._deleteButtonsClickHandler);
+    this.setCommentSubmitHandler(this._commentSubmitHandler);
   }
 
   setCloseClickHandler(handler) {
@@ -196,5 +208,63 @@ export default class FilmDetails extends AbstractSmartComponent {
   setEmojiClickHandler(handler) {
     this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`click`, handler);
     this._emojiClickHandler = handler;
+  }
+
+  setEmoji(evt) {
+    if (evt.target.tagName !== `IMG`) {
+      return;
+    }
+
+    const selectedEmoji = evt.target.dataset.emojiName;
+
+    const selectedEmojiElement = this.getElement().querySelector(`.film-details__add-emoji-label`);
+    selectedEmojiElement.innerHTML = `<img src="images/emoji/${selectedEmoji}.png" width="55" height="55" alt="emoji-${selectedEmoji}">`;
+  }
+
+  setDeleteButtonsClickHandler(handler) {
+    this.getElement().querySelectorAll(`.film-details__comment-delete`)
+      .forEach((it) => it.addEventListener(`click`, handler));
+    this._deleteButtonsClickHandler = handler;
+  }
+
+  setCommentSubmitHandler(handler) {
+    this.getElement().querySelector(`.film-details__comment-input`)
+      .addEventListener(`keydown`, handler);
+    this._commentSubmitHandler = handler;
+  }
+
+  getNewCommentData() {
+    const comment = this._parseData();
+    comment.text = encode(comment.text);
+    comment.author = `Movie Buff`;
+    return comment;
+  }
+
+  clearNewComment() {
+    const element = this.getElement();
+    element.querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
+    element.querySelector(`.film-details__comment-input`).value = ``;
+    element.querySelectorAll(`.film-details__emoji-item`).forEach((it) => {
+      it.checked = false;
+    });
+  }
+
+  _parseData() {
+    const result = {
+      text: ``,
+      emoji: null,
+      date: new Date(),
+    };
+    const newCommentElement = this.getElement().querySelector(`.film-details__new-comment`);
+    const commentTextElement = newCommentElement.querySelector(`.film-details__comment-input`);
+    const allEmojis = newCommentElement.querySelectorAll(`.film-details__emoji-item`);
+    result.text = commentTextElement.value;
+    allEmojis.forEach((it) => {
+      if (it.checked) {
+        result.emoji = it.value;
+      }
+    });
+
+    return result;
   }
 }

@@ -35,3 +35,19 @@ export const sortFilms = (films, sortType) => {
   }
   return sortedFilms;
 };
+
+export const isWatchlistFilm = (film) => {
+  return film.watchlist;
+};
+
+export const isHistoryFilm = (film) => {
+  return film.history;
+};
+
+export const isFavoritesFilm = (film) => {
+  return film.favorites;
+};
+
+export const transformToFirstCapitalSymbol = (str) => {
+  return `${str[0].toUpperCase()}${str.slice(1)}`;
+};

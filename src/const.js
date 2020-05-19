@@ -1,7 +1,7 @@
 export const DESCRIPTION_PREVIEW_LENGTH = 140;
 
 export const FilmsQuantity = {
-  ALL: 22,
+  ALL: 10,
   ADDITIONAL: 2,
   SHOWING_ON_START: 5,
   SHOWING_BY_BUTTON: 5,
@@ -15,7 +15,7 @@ export const AdditionalCategory = {
   COMMENT: {
     title: `Most commented`,
     additionalClass: `js-mc`
-  }
+  },
 };
 
 export const DISPLAYED_FILMS_IN_MENU = 5;
@@ -33,3 +33,14 @@ export const emojis = [
   `puke`,
   `angry`
 ];
+
+export const FilterType = {
+  ALL: `all`,
+  WATCHLIST: `watchlist`,
+  HISTORY: `history`,
+  FAVORITES: `favorites`,
+};
+
+export const KeyCode = {
+  ENTER: 13,
+};

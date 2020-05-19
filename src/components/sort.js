@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component";
+import AbstractSmartComponent from "./abstract-smart-component";
 import {SortType} from "../const";
 
 const createSortTemplate = (sortType = SortType.DEFAULT) => {
@@ -11,10 +11,11 @@ const createSortTemplate = (sortType = SortType.DEFAULT) => {
   `);
 };
 
-export default class Sort extends AbstractComponent {
+export default class Sort extends AbstractSmartComponent {
   constructor() {
     super();
     this._currentSortType = SortType.DEFAULT;
+    this._sortClickHandler = null;
   }
 
   getTemplate() {
@@ -22,6 +23,7 @@ export default class Sort extends AbstractComponent {
   }
 
   setClickHandler(handler) {
+    this._sortClickHandler = handler;
     this.getElement().addEventListener(`click`, (evt) => {
       evt.preventDefault();
 
@@ -38,5 +40,9 @@ export default class Sort extends AbstractComponent {
       this._currentSortType = sortType;
       handler(this._currentSortType);
     });
+  }
+
+  recoveryListeners() {
+    this.setClickHandler(this._sortClickHandler);
   }
 }

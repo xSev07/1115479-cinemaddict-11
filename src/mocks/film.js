@@ -106,13 +106,13 @@ const generateRating = () => {
   return (Math.random() * 10).toFixed(1);
 };
 
-const generateRandomArray = (array, min, max) => {
+const generateRandomArray = (array, min, max, needCopyArray = true) => {
   const count = getRandomIntegerNumber(min, max);
-  const copy = array.slice();
-  const res = [];
+  const copy = needCopyArray ? array.slice() : array;
+  let res = [];
   for (let i = 0; i < count; i++) {
     const index = getRandomIntegerNumber(0, copy.length);
-    res.push(copy.splice(index, 1));
+    res = [].concat(res, copy.splice(index, 1));
   }
   return res;
 };
@@ -128,9 +128,6 @@ const generateGenres = () => {
 const generateRuntime = () => {
   const runtime = getRandomIntegerNumber(30, 120);
   return getFormatedNumber(runtime);
-  // const hours = getRandomIntegerNumber(0, 2);
-  // const minutes = hours === 0 ? getRandomIntegerNumber(30, 59) : getRandomIntegerNumber(0, 59);
-  // return `${hours}h ${getFormatedNumber(minutes)}m`;
 };
 
 const generateHumans = () => {
@@ -139,6 +136,7 @@ const generateHumans = () => {
 
 const generateComment = () => {
   return {
+    id: String(new Date() + Math.random()),
     text: getRandomArrayItem(reviews),
     emoji: getRandomArrayItem(emojis),
     author: getRandomArrayItem(humans),
@@ -147,13 +145,24 @@ const generateComment = () => {
 };
 
 const generateComments = () => {
-  const count = getRandomIntegerNumber(Count.COMMENTS_MIN, Count.COMMENTS_MAX);
-  return Array.from(Array(count), generateComment);
+  // const count = getRandomIntegerNumber(Count.COMMENTS_MIN, Count.COMMENTS_MAX);
+  // return Array.from(Array(count), generateComment);
+  return Array.from(Array(80), generateComment);
+};
+
+const comments = generateComments();
+const commentsCopy = comments.slice();
+
+const addCommentsToFilm = () => {
+  const commentForFilm = generateRandomArray(commentsCopy, Count.COMMENTS_MIN, Count.COMMENTS_MAX, false);
+  const commentsIds = [].concat(commentForFilm.map((it) => it.id));
+  return commentsIds;
 };
 
 const generateFilm = () => {
   const title = getRandomArrayItem(filmsName);
   return {
+    id: String(new Date() + Math.random()),
     title,
     titleOriginal: `Original: ${title}`,
     age: getRandomArrayItem(ages),
@@ -161,7 +170,8 @@ const generateFilm = () => {
     rating: generateRating(),
     genres: generateGenres(),
     description: generateDescription(),
-    comments: generateComments(),
+    // comments: generateComments(),
+    comments: addCommentsToFilm(),
     director: getRandomArrayItem(humans),
     writers: generateHumans(),
     actors: generateHumans(),
@@ -178,4 +188,4 @@ const generateFilms = (count) => {
   return Array.from(Array(count), generateFilm);
 };
 
-export {generateFilms, generateFilm};
+export {generateFilms, generateFilm, comments};

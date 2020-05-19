@@ -32,7 +32,6 @@ export default class FilmsModel {
         newFilm = film;
       }
     });
-    // this._callHandlers(this._dataChangeHandlers);
     return newFilm;
   }
 

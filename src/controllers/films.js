@@ -26,7 +26,6 @@ export default class FilmsController {
     this._onShowMoreButtonClick = this._onShowMoreButtonClick.bind(this);
     this._filmsModel.setFilterChangeHandler(this._onFilterChange);
     this._commentsModel = new CommentsModel(comments, this._onCommentChange);
-    // this._commentsModel.setDataChangeHandler(this._onCommentChange);
   }
 
   renderFilmsAfterSorting(films, start, finish) {
@@ -50,7 +49,6 @@ export default class FilmsController {
   _renderFilmsCards(element, array, start = 0, finish = array.length, additional = false) {
     const newFilms = array.slice(start, finish)
       .map((film) => {
-        // const filmController = new FilmController(element, siteFooterElement, this._onDataChange, this._onViewChange);
         const filmController = new FilmController(element, siteFooterElement, this._getChangeFunctions());
         filmController.render(film, this._commentsModel);
         return filmController;

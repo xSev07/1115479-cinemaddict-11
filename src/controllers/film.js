@@ -4,20 +4,9 @@ import FilmDetails from "../components/film-details";
 import {KeyCode} from "../const";
 
 export default class FilmController {
-  /**
-   * Создает экземплят класса FilmController
-   *
-   * @param {HTMLElement} container контейнер для карточки фильма
-   * @param {HTMLElement} containerDetails контейнер для детальной информации о фильме
-   * @param {function} onDataChange функция вызываемая при изменении данных
-   * @param {function} onViewChange функция вызываемая при изменении отображения фильма
-   */
-  // constructor(container, containerDetails, onDataChange, onViewChange) {
   constructor(container, containerDetails, changeFunctions) {
     this._container = container;
     this._containerDetails = containerDetails;
-    // this._onDataChange = onDataChange;
-    // this._onViewChange = onViewChange;
     this._onDataChange = changeFunctions.FILM_DATA;
     this._onCommentChange = changeFunctions.COMMENT_DATA;
     this._onViewChange = changeFunctions.VIEW;

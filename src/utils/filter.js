@@ -27,15 +27,3 @@ export const getFilmsByFilter = (films, filterType) => {
   }
   return films;
 };
-
-// export const getAllFilters = (allFilms, activeFilterType) => {
-//   const filters = Object.values(FilterType).map((filterType) => {
-//     return {
-//       name: filterType,
-//       count: getFilmsByFilter(allFilms, filterType).length,
-//       checked: filterType === activeFilterType,
-//     };
-//   });
-//
-//   return filters;
-// };

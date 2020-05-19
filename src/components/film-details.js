@@ -254,7 +254,7 @@ export default class FilmDetails extends AbstractSmartComponent {
   _parseData() {
     const result = {
       text: ``,
-      emoji: null,
+      emoji: `smile`,
       date: new Date(),
     };
     const newCommentElement = this.getElement().querySelector(`.film-details__new-comment`);

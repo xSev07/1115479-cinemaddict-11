@@ -63,6 +63,7 @@ export default class FilmController {
   setDefaultView() {
     if (this._displayed) {
       this._closeFilmDetails();
+      this._filmDetailsComponent.clearNewComment();
       this._displayed = false;
     }
   }
@@ -122,7 +123,7 @@ export default class FilmController {
   }
 
   _closeFilmDetails() {
-    this._filmDetailsComponent.clearNewComment();
+    // this._filmDetailsComponent.clearNewComment();
     this._filmDetailsComponent.getElement().remove();
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }

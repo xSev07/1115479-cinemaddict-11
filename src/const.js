@@ -44,3 +44,8 @@ export const FilterType = {
 export const KeyCode = {
   ENTER: 13,
 };
+
+export const Pages = {
+  FILMS: `films`,
+  STATISTIC: `statistic`,
+};

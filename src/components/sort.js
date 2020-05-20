@@ -18,6 +18,10 @@ export default class Sort extends AbstractSmartComponent {
     this._sortClickHandler = null;
   }
 
+  setSortType(sortType) {
+    this._currentSortType = sortType;
+  }
+
   getTemplate() {
     return createSortTemplate(this._currentSortType);
   }

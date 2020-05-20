@@ -29,16 +29,16 @@ export default class FilmController {
     this._commentsModel = commentsModel || this._commentsModel;
     const comments = film.comments.map((it) => this._commentsModel.getComment(it));
 
-    this._filmDetailsComponent = new FilmDetails(film, comments);
-    this._filmDetailsComponent.setCloseClickHandler(this._closeFilmDetails);
-    this._setStatusClickHandlers(this._filmDetailsComponent, film);
-    this._onEmojiClick();
-    this._onCommentDelete();
-    this._onCommentSubmit();
+    // this._filmDetailsComponent = new FilmDetails(film, comments);
+    // this._filmDetailsComponent.setCloseClickHandler(this._closeFilmDetails);
+    // this._setStatusClickHandlers(this._filmDetailsComponent, film);
+    // this._onEmojiClick();
+    // this._onCommentDelete();
+    // this._onCommentSubmit();
 
     if (oldFilmComponent && oldFilmDetailsComponent) {
       replace(this._filmComponent, oldFilmComponent);
-      replace(this._filmDetailsComponent, oldFilmDetailsComponent);
+      // replace(this._filmDetailsComponent, oldFilmDetailsComponent);
     } else {
       this._onViewChange();
       render(this._container, this._filmComponent);

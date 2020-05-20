@@ -170,7 +170,6 @@ const generateFilm = () => {
     rating: generateRating(),
     genres: generateGenres(),
     description: generateDescription(),
-    // comments: generateComments(),
     comments: addCommentsToFilm(),
     director: getRandomArrayItem(humans),
     writers: generateHumans(),

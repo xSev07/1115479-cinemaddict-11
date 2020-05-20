@@ -87,7 +87,6 @@ export default class PageController {
   }
 
   _onStatsChange(evt) {
-    // debugger;
-    console.log(evt.target.value);
+    // console.log(evt.target.value);
   }
 }

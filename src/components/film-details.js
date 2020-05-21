@@ -1,5 +1,5 @@
 import {emojis} from "../const";
-import {getFormatedCommentDate, getFormatedDate} from "../utils/common";
+import {getFormatedCommentDate, getFormatedDate, getFormatedNumber} from "../utils/common";
 import AbstractSmartComponent from "./abstract-smart-component";
 const sanitizeHtml = require(`sanitize-html`);
 
@@ -44,6 +44,8 @@ const createEmojiTemplate = (name) => {
 
 const createFilmDetailsTemplate = (film, comments) => {
   const {title, titleOriginal, poster, age, rating, genres, description, releaseDate, runtime, director, writers, actors, country, watchlist, history, favorites} = film;
+
+  const formatedRuntime = getFormatedNumber(runtime);
 
   const watchlistTemplate = createFilmControlTemplate(`watchlist`, watchlist);
   const watchedTemplate = createFilmControlTemplate(`watched`, history);
@@ -97,7 +99,7 @@ const createFilmDetailsTemplate = (film, comments) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${runtime}</td>
+                  <td class="film-details__cell">${formatedRuntime}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>

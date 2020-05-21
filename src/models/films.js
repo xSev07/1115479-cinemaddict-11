@@ -3,8 +3,8 @@ import {getFilmsByFilter} from "../utils/filter";
 
 
 export default class FilmsModel {
-  constructor(films) {
-    this._films = films;
+  constructor() {
+    this._films = [];
     this._activeFilterType = FilterType.ALL;
 
     this._dataChangeHandlers = [];

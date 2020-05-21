@@ -49,3 +49,8 @@ export const Pages = {
   FILMS: `films`,
   STATISTIC: `statistic`,
 };
+
+export const NoDataStatus = {
+  LOADING: `Loading...`,
+  NO_DATA: `There are no movies in our database`,
+};

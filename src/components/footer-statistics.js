@@ -10,6 +10,10 @@ export default class FooterStatistics extends AbstractComponent {
     this._filmsCount = count;
   }
 
+  setFilmsCount(count) {
+    this._filmsCount = count;
+  }
+
   getTemplate() {
     return createFooterStatistics(this._filmsCount);
   }

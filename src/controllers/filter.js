@@ -40,6 +40,10 @@ export default class FilterController {
     }
   }
 
+  // rerender() {
+    // this._filterComponent.rerender();
+  // }
+
   _onDataChange() {
     this.render();
   }

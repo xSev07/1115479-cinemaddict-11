@@ -1,5 +1,6 @@
-import {FilmsQuantity, Pages, SortType} from "../const";
-import {render} from "../utils/render";
+import API from "../api";
+import {FilmsQuantity, NoDataStatus, Pages, SortType} from "../const";
+import {remove, render, replace} from "../utils/render";
 import {sortFilms} from "../utils/common";
 import Profile from "../components/profile";
 import Sort from "../components/sort";
@@ -9,22 +10,27 @@ import FilmsController from "./films";
 import FilmsModel from "../models/films";
 import FilterController from "../controllers/filter";
 import FooterStatistics from "../components/footer-statistics";
+import FilmsNoData from "../components/films-no-data";
+
+const AUTHORIZATION = `Basic gfjdoHFJDL59fdsfds7`;
+const api = new API(AUTHORIZATION);
 
 export default class PageController {
-  constructor(films) {
+  constructor() {
     this._showedPage = Pages.FILMS;
     this._siteHeaderElement = document.querySelector(`.header`);
     this._siteMainElement = document.querySelector(`.main`);
     this._siteFooterStatisticsElement = document.querySelector(`.footer__statistics`);
     this._showingFilmsCount = FilmsQuantity.SHOWING_ON_START;
-    this._films = films;
-    this._sortedFilms = films;
-    this._filmsModel = new FilmsModel(this._films);
+    this._films = [];
+    this._sortedFilms = [];
+    this._filmsModel = new FilmsModel();
     this._profileComponent = new Profile();
     this._sortComponent = new Sort();
-    this._filmsComponent = new Films(this._films);
+    this._filmsComponent = new Films();
     this._filmsController = new FilmsController(this._filmsComponent, this._filmsModel);
     this._statistic = new Statistic();
+    this._footerComponent = new FooterStatistics(this._films.length);
     this._onPageChange = this._onPageChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._sortComponent.setClickHandler(this._onSortTypeChange);
@@ -33,21 +39,25 @@ export default class PageController {
   }
 
   render() {
+    this._filmsNoData = new FilmsNoData();
+
     render(this._siteHeaderElement, this._profileComponent);
     this._filterController.render();
 
     render(this._siteMainElement, this._sortComponent);
-    render(this._siteMainElement, this._filmsComponent);
-
-    if (this._films.length > 0) {
-      this._filmsController.render();
-    }
+    render(this._siteMainElement, this._filmsNoData);
 
     render(this._siteMainElement, this._statistic);
     this.hide(this._statistic);
     this._statistic.createChart();
 
-    render(this._siteFooterStatisticsElement, new FooterStatistics(this._films.length));
+    render(this._siteFooterStatisticsElement, this._footerComponent);
+
+    api.getFilms()
+      .then((films) => this._renderAfterAcceptFilms(films))
+      .catch(() => {
+        this._filmsNoData.setStatus(NoDataStatus.NO_DATA);
+      });
   }
 
   hide(container) {
@@ -56,6 +66,21 @@ export default class PageController {
 
   show(container) {
     container.show();
+  }
+
+  _renderAfterAcceptFilms(films) {
+    if (films.length === 0) {
+      throw new Error(`No films in base`);
+    }
+    this._films = films;
+    this._filmsModel.setFilms(films);
+    this._filterController.render();
+    remove(this._filmsNoData);
+    render(this._siteMainElement, this._filmsComponent);
+    this._filmsController.render();
+    remove(this._footerComponent);
+    this._footerComponent.setFilmsCount(films.length);
+    render(this._siteFooterStatisticsElement, this._footerComponent);
   }
 
   _onPageChange(page) {

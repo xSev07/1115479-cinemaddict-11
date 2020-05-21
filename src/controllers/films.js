@@ -4,13 +4,13 @@ import FilmController from "./film";
 import {AdditionalCategory, FilmsQuantity, SortType} from "../const";
 import ShowMoreButton from "../components/show-more-button";
 import FilmsExtra from "../components/films-extra";
-import {comments} from "../mocks/film";
+// import {comments} from "../mocks/film";
 import CommentsModel from "../models/comments";
 
 const siteFooterElement = document.querySelector(`.footer`);
 
 export default class FilmsController {
-  constructor(container, filmsModel) {
+  constructor(container, filmsModel, comments) {
     this._container = container;
     this._filmsModel = filmsModel;
     this._showedFilmController = [];

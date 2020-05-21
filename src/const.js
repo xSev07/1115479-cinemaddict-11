@@ -1,7 +1,6 @@
 export const DESCRIPTION_PREVIEW_LENGTH = 140;
 
 export const FilmsQuantity = {
-  ALL: 10,
   ADDITIONAL: 2,
   SHOWING_ON_START: 5,
   SHOWING_BY_BUTTON: 5,

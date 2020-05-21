@@ -28,7 +28,8 @@ export default class PageController {
     this._profileComponent = new Profile();
     this._sortComponent = new Sort();
     this._filmsComponent = new Films();
-    this._filmsController = new FilmsController(this._filmsComponent, this._filmsModel);
+    // this._filmsController = new FilmsController(this._filmsComponent, this._filmsModel);
+    this._filmsController = null;
     this._statistic = new Statistic();
     this._footerComponent = new FooterStatistics(this._films.length);
     this._onPageChange = this._onPageChange.bind(this);
@@ -54,10 +55,10 @@ export default class PageController {
     render(this._siteFooterStatisticsElement, this._footerComponent);
 
     api.getFilms()
-      .then((films) => this._renderAfterAcceptFilms(films))
-      .catch(() => {
-        this._filmsNoData.setStatus(NoDataStatus.NO_DATA);
-      });
+    .then((films) => this._getCommentsAndRender(films))
+    .catch(() => {
+      this._filmsNoData.setStatus(NoDataStatus.NO_DATA);
+    });
   }
 
   hide(container) {
@@ -66,6 +67,16 @@ export default class PageController {
 
   show(container) {
     container.show();
+  }
+
+  _getCommentsAndRender(films){
+    const commentsPromises = films.map((film) => api.getComments(film.id));
+    Promise.all(commentsPromises)
+      .then((rawComments) => {
+        const comments = [].concat(...rawComments);
+        this._filmsController = new FilmsController(this._filmsComponent, this._filmsModel, comments);
+        this._renderAfterAcceptFilms(films);
+      });
   }
 
   _renderAfterAcceptFilms(films) {

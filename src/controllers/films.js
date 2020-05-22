@@ -4,7 +4,6 @@ import FilmController from "./film";
 import {AdditionalCategory, FilmsQuantity, SortType} from "../const";
 import ShowMoreButton from "../components/show-more-button";
 import FilmsExtra from "../components/films-extra";
-// import {comments} from "../mocks/film";
 import CommentsModel from "../models/comments";
 
 const siteFooterElement = document.querySelector(`.footer`);
@@ -102,7 +101,9 @@ export default class FilmsController {
     const controllerIndex = this._showedFilmController.findIndex((it) => it.compareFilmData(oldData));
     const controllerAdditionalIndex = this._showedAdditionalFilmController.findIndex((it) => it.compareFilmData(oldData));
     this._showedFilmController[controllerIndex].setStatusDisabled(true);
-    this._showedAdditionalFilmController[controllerAdditionalIndex].setStatusDisabled(true);
+    if (controllerAdditionalIndex !== -1) {
+      this._showedAdditionalFilmController[controllerAdditionalIndex].setStatusDisabled(true);
+    }
     this._api.updateFilm(oldData.id, newData)
       .then((filmModel) => {
         const isSuccess = this._filmsModel.updateFilm(oldData.id, filmModel);
@@ -116,7 +117,9 @@ export default class FilmsController {
       })
       .catch(() => {
         this._showedFilmController[controllerIndex].setStatusDisabled(false);
-        this._showedAdditionalFilmController[controllerAdditionalIndex].setStatusDisabled(false);
+        if (controllerAdditionalIndex !== -1) {
+          this._showedAdditionalFilmController[controllerAdditionalIndex].setStatusDisabled(false);
+        }
       });
   }
 

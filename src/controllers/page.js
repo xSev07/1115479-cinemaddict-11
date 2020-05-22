@@ -13,7 +13,8 @@ import FooterStatistics from "../components/footer-statistics";
 import FilmsNoData from "../components/films-no-data";
 
 const AUTHORIZATION = `Basic gfjdoHFJDL59fdsfds7`;
-const api = new API(AUTHORIZATION);
+const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
+const api = new API(END_POINT, AUTHORIZATION);
 
 export default class PageController {
   constructor() {

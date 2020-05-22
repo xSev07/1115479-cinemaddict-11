@@ -64,10 +64,15 @@ export default class FilmController {
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
+  setStatusDisabled(value) {
+    this._filmComponent.setStatusDisabled(value);
+    this._filmDetailsComponent.setStatusDisabled(value);
+  }
+
   _onDataUpdate(evt, film, propertyName) {
     evt.preventDefault();
     const newFilm = Film.clone(film);
-    newFilm[propertyName] = !film[propertyName];
+    newFilm[propertyName] = !newFilm[propertyName];
     this._onDataChange(film, newFilm);
   }
 

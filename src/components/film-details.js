@@ -195,18 +195,24 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   setWatchlistClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`#watchlist`).addEventListener(`click`, handler);
     this._watchlistClickHandler = handler;
   }
 
   setWatchedClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`#watched`).addEventListener(`change`, handler);
     this._watchedClickHandler = handler;
   }
 
   setFavoriteClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`#favorite`).addEventListener(`change`, handler);
     this._favoriteClickHandler = handler;
+  }
+
+  setStatusDisabled(value) {
+    this.getElement().querySelector(`#watchlist`).disabled = value;
+    this.getElement().querySelector(`#watched`).disabled = value;
+    this.getElement().querySelector(`#favorite`).disabled = value;
   }
 
   setEmojiClickHandler(handler) {

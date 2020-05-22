@@ -38,7 +38,7 @@ const API = class {
     headers.append(`Content-Type`, `application/json`);
     return fetch(`https://11.ecmascript.pages.academy/cinemaddict/movies/${id}`, {
       method: `PUT`,
-      body: JSON.stringify(data.roRaw()),
+      body: JSON.stringify(data.toRaw()),
       headers,
     })
       .then(checkStatus)

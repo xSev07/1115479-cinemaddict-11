@@ -99,33 +99,25 @@ export default class FilmsController {
   }
 
   _onDataChange(oldData, newData) {
-    debugger
+    const controllerIndex = this._showedFilmController.findIndex((it) => it.compareFilmData(oldData));
+    const controllerAdditionalIndex = this._showedAdditionalFilmController.findIndex((it) => it.compareFilmData(oldData));
+    this._showedFilmController[controllerIndex].setStatusDisabled(true);
+    this._showedAdditionalFilmController[controllerAdditionalIndex].setStatusDisabled(true);
     this._api.updateFilm(oldData.id, newData)
       .then((filmModel) => {
-        debugger
-        const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
+        const isSuccess = this._filmsModel.updateFilm(oldData.id, filmModel);
         if (isSuccess) {
-          const controllerIndex = this._showedFilmController.findIndex((it) => it.compareFilmData(oldData));
           this._showedFilmController[controllerIndex].render(newData);
 
-          const controllerAdditionalIndex = this._showedAdditionalFilmController.findIndex((it) => it.compareFilmData(oldData));
           if (controllerAdditionalIndex !== -1) {
             this._showedAdditionalFilmController[controllerAdditionalIndex].render(newData);
           }
         }
+      })
+      .catch(() => {
+        this._showedFilmController[controllerIndex].setStatusDisabled(false);
+        this._showedAdditionalFilmController[controllerAdditionalIndex].setStatusDisabled(false);
       });
-
-
-    // const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
-    // if (isSuccess) {
-    //   const controllerIndex = this._showedFilmController.findIndex((it) => it.compareFilmData(oldData));
-    //   this._showedFilmController[controllerIndex].render(newData);
-    //
-    //   const controllerAdditionalIndex = this._showedAdditionalFilmController.findIndex((it) => it.compareFilmData(oldData));
-    //   if (controllerAdditionalIndex !== -1) {
-    //     this._showedAdditionalFilmController[controllerAdditionalIndex].render(newData);
-    //   }
-    // }
   }
 
   _onCommentChange(comment, film) {

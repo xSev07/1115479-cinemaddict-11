@@ -72,4 +72,10 @@ export default class FilmCard extends AbstractSmartComponent {
   setFavoriteClickHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, handler);
   }
+
+  setStatusDisabled(value) {
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).disabled = value;
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).disabled = value;
+    this.getElement().querySelector(`.film-card__controls-item--favorite`).disabled = value;
+  }
 }

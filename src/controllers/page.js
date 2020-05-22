@@ -1,6 +1,6 @@
 import API from "../api";
 import {FilmsQuantity, NoDataStatus, Pages, SortType} from "../const";
-import {remove, render, replace} from "../utils/render";
+import {remove, render} from "../utils/render";
 import {sortFilms} from "../utils/common";
 import Profile from "../components/profile";
 import Sort from "../components/sort";
@@ -70,7 +70,7 @@ export default class PageController {
     container.show();
   }
 
-  _getCommentsAndRender(films){
+  _getCommentsAndRender(films) {
     const commentsPromises = films.map((film) => api.getComments(film.id));
     Promise.all(commentsPromises)
       .then((rawComments) => {
@@ -123,7 +123,8 @@ export default class PageController {
     this._filmsController.renderFilmsAfterSorting(this._sortedFilms, 0, this._showingFilmsCount);
   }
 
-  _onStatsChange(evt) {
+  // _onStatsChange(evt) {
+  _onStatsChange() {
     // console.log(evt.target.value);
   }
 }

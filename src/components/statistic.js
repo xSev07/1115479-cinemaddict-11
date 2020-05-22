@@ -1,4 +1,3 @@
-import AbstractComponent from "./abstract-component";
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import AbstractSmartComponent from "./abstract-smart-component";
@@ -7,7 +6,7 @@ const createChart = () => {
   const BAR_HEIGHT = 50;
   const statisticCtx = document.querySelector(`.statistic__chart`);
 
-// Обязательно рассчитайте высоту canvas, она зависит от количества элементов диаграммы
+  // Обязательно рассчитайте высоту canvas, она зависит от количества элементов диаграммы
   statisticCtx.height = BAR_HEIGHT * 5;
 
   const myChart = new Chart(statisticCtx, {
@@ -29,8 +28,8 @@ const createChart = () => {
             size: 20
           },
           color: `#ffffff`,
-          anchor: 'start',
-          align: 'start',
+          anchor: `start`,
+          align: `start`,
           offset: 40,
         }
       },
@@ -69,17 +68,6 @@ const createChart = () => {
 
   return myChart;
 };
-
-// const createStatisticsList = () => {
-//   const title = `You watched`;
-//   const
-//   return (`
-//     <li class="statistic__text-item">
-//       <h4 class="statistic__item-title">You watched</h4>
-//       <p class="statistic__item-text">22 <span class="statistic__item-description">movies</span></p>
-//     </li>
-//   `);
-// };
 
 const createStatisticTemplate = () => {
   const rank = `Sci-Fighter`;

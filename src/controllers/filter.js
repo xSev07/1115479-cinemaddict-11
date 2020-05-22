@@ -40,15 +40,11 @@ export default class FilterController {
     }
   }
 
-  // rerender() {
-    // this._filterComponent.rerender();
-  // }
-
   _onDataChange() {
     this.render();
   }
 
-  _onFilterChange(filterType) {
+  _onFilterChange(evt, filterType) {
     if (this._activeFilterType === filterType) {
       return;
     }
@@ -58,7 +54,7 @@ export default class FilterController {
     this.render();
   }
 
-  _onStatisticClick() {
+  _onStatisticClick(evt) {
     this._activeFilterType = null;
     this._onPageChange(Pages.STATISTIC);
     this.render();

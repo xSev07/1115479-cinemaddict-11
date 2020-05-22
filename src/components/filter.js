@@ -48,8 +48,9 @@ export default class FilterComponent extends AbstractSmartComponent {
     this.getElement().querySelectorAll(`.main-navigation__item`)
       .forEach((it) => {
         it.addEventListener(`click`, (evt) => {
+          evt.preventDefault();
           const filterName = evt.target.dataset.filterType;
-          handler(filterName);
+          handler(evt, filterName);
         });
       });
   }
@@ -57,7 +58,8 @@ export default class FilterComponent extends AbstractSmartComponent {
   setStatisticClickHandler(handler) {
     this._statisticClickHandler = handler;
     this.getElement().querySelector(`.main-navigation__additional`)
-      .addEventListener(`click`, () => {
+      .addEventListener(`click`, (evt) => {
+        evt.preventDefault();
         handler();
       });
   }

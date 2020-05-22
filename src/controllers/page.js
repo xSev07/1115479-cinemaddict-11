@@ -74,7 +74,7 @@ export default class PageController {
     Promise.all(commentsPromises)
       .then((rawComments) => {
         const comments = [].concat(...rawComments);
-        this._filmsController = new FilmsController(this._filmsComponent, this._filmsModel, comments);
+        this._filmsController = new FilmsController(this._filmsComponent, this._filmsModel, comments, api);
         this._renderAfterAcceptFilms(films);
       });
   }

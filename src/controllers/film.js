@@ -2,6 +2,7 @@ import {remove, render, replace} from "../utils/render";
 import FilmCard from "../components/film-card";
 import FilmDetails from "../components/film-details";
 import {KeyCode} from "../const";
+import Film from "../models/film";
 
 export default class FilmController {
   constructor(container, containerDetails, changeFunctions) {
@@ -65,7 +66,9 @@ export default class FilmController {
 
   _onDataUpdate(evt, film, propertyName) {
     evt.preventDefault();
-    this._onDataChange(film, Object.assign({}, film, {[propertyName]: !film[propertyName]}));
+    const newFilm = Film.clone(film);
+    newFilm[propertyName] = !film[propertyName];
+    this._onDataChange(film, newFilm);
   }
 
   _setStatusClickHandlers(component, film) {

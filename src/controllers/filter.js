@@ -54,7 +54,7 @@ export default class FilterController {
     this.render();
   }
 
-  _onStatisticClick(evt) {
+  _onStatisticClick() {
     this._activeFilterType = null;
     this._onPageChange(Pages.STATISTIC);
     this.render();

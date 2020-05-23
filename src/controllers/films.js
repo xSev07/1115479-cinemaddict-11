@@ -4,17 +4,17 @@ import FilmController from "./film";
 import {AdditionalCategory, FilmsQuantity, SortType} from "../const";
 import ShowMoreButton from "../components/show-more-button";
 import FilmsExtra from "../components/films-extra";
-import {comments} from "../mocks/film";
 import CommentsModel from "../models/comments";
 
 const siteFooterElement = document.querySelector(`.footer`);
 
 export default class FilmsController {
-  constructor(container, filmsModel) {
+  constructor(container, filmsModel, comments, api) {
     this._container = container;
     this._filmsModel = filmsModel;
     this._showedFilmController = [];
     this._showedAdditionalFilmController = [];
+    this._api = api;
     this._showingFilmsCount = FilmsQuantity.SHOWING_ON_START;
     this._showMoreButtonComponent = new ShowMoreButton();
     this._filmsElement = this._container.getElement();
@@ -28,12 +28,14 @@ export default class FilmsController {
     this._commentsModel = new CommentsModel(comments, this._onCommentChange);
   }
 
-  renderFilmsAfterSorting(films, start, finish) {
-    this._filmsModel.setFilms(films);
+  // renderFilmsAfterSorting(films, start, finish) {
+  renderFilmsAfterSorting(start, finish) {
+    // this._filmsModel.setFilms(films);
     this._showingFilmsCount = FilmsQuantity.SHOWING_ON_START;
     this._removeFilms();
     remove(this._showMoreButtonComponent);
     this._renderShowMoreButton();
+    // this._renderFilmsCards(this._filmsContainerElement, films, start, finish);
     this._renderFilmsCards(this._filmsContainerElement, this._filmsModel.getFilms(), start, finish);
   }
 
@@ -98,16 +100,29 @@ export default class FilmsController {
   }
 
   _onDataChange(oldData, newData) {
-    const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
-    if (isSuccess) {
-      const controllerIndex = this._showedFilmController.findIndex((it) => it.compareFilmData(oldData));
-      this._showedFilmController[controllerIndex].render(newData);
-
-      const controllerAdditionalIndex = this._showedAdditionalFilmController.findIndex((it) => it.compareFilmData(oldData));
-      if (controllerAdditionalIndex !== -1) {
-        this._showedAdditionalFilmController[controllerAdditionalIndex].render(newData);
-      }
+    const controllerIndex = this._showedFilmController.findIndex((it) => it.compareFilmData(oldData));
+    const controllerAdditionalIndex = this._showedAdditionalFilmController.findIndex((it) => it.compareFilmData(oldData));
+    this._showedFilmController[controllerIndex].setStatusDisabled(true);
+    if (controllerAdditionalIndex !== -1) {
+      this._showedAdditionalFilmController[controllerAdditionalIndex].setStatusDisabled(true);
     }
+    this._api.updateFilm(oldData.id, newData)
+      .then((filmModel) => {
+        const isSuccess = this._filmsModel.updateFilm(oldData.id, filmModel);
+        if (isSuccess) {
+          this._showedFilmController[controllerIndex].render(newData);
+
+          if (controllerAdditionalIndex !== -1) {
+            this._showedAdditionalFilmController[controllerAdditionalIndex].render(newData);
+          }
+        }
+      })
+      .catch(() => {
+        this._showedFilmController[controllerIndex].setStatusDisabled(false);
+        if (controllerAdditionalIndex !== -1) {
+          this._showedAdditionalFilmController[controllerAdditionalIndex].setStatusDisabled(false);
+        }
+      });
   }
 
   _onCommentChange(comment, film) {

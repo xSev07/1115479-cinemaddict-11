@@ -1,7 +1,6 @@
 export const DESCRIPTION_PREVIEW_LENGTH = 140;
 
 export const FilmsQuantity = {
-  ALL: 10,
   ADDITIONAL: 2,
   SHOWING_ON_START: 5,
   SHOWING_BY_BUTTON: 5,
@@ -43,4 +42,20 @@ export const FilterType = {
 
 export const KeyCode = {
   ENTER: 13,
+};
+
+export const Pages = {
+  FILMS: `films`,
+  STATISTIC: `statistic`,
+};
+
+export const NoDataStatus = {
+  LOADING: `Loading...`,
+  NO_DATA: `There are no movies in our database`,
+};
+
+export const Rank = {
+  LOW: `novice`,
+  MIDDLE: `fan`,
+  HIGH: `movie buff`,
 };

@@ -2,6 +2,7 @@ import {remove, render, replace} from "../utils/render";
 import FilmCard from "../components/film-card";
 import FilmDetails from "../components/film-details";
 import {KeyCode} from "../const";
+import Film from "../models/film";
 
 export default class FilmController {
   constructor(container, containerDetails, changeFunctions) {
@@ -63,9 +64,16 @@ export default class FilmController {
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
+  setStatusDisabled(value) {
+    this._filmComponent.setStatusDisabled(value);
+    this._filmDetailsComponent.setStatusDisabled(value);
+  }
+
   _onDataUpdate(evt, film, propertyName) {
     evt.preventDefault();
-    this._onDataChange(film, Object.assign({}, film, {[propertyName]: !film[propertyName]}));
+    const newFilm = Film.clone(film);
+    newFilm[propertyName] = !newFilm[propertyName];
+    this._onDataChange(film, newFilm);
   }
 
   _setStatusClickHandlers(component, film) {
@@ -105,7 +113,7 @@ export default class FilmController {
   }
 
   _closeFilmDetails() {
-    // this._filmDetailsComponent.clearNewComment();
+    this._filmDetailsComponent.clearNewComment();
     this._filmDetailsComponent.getElement().remove();
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }

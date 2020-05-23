@@ -1,12 +1,12 @@
 import {emojis} from "../const";
-import {getFormatedCommentDate, getFormatedDate} from "../utils/common";
+import {getFormatedCommentDate, getFormatedDate, getFormatedNumber} from "../utils/common";
 import AbstractSmartComponent from "./abstract-smart-component";
-import {encode} from "he";
+const sanitizeHtml = require(`sanitize-html`);
 
 const createCommentTemplate = (comment) => {
   const {id, text: notSanitizedText, emoji, author: notSanitizedAuthor, date} = comment;
-  const text = encode(notSanitizedText);
-  const author = encode(notSanitizedAuthor);
+  const text = sanitizeHtml(notSanitizedText);
+  const author = sanitizeHtml(notSanitizedAuthor);
 
   return (`
     <li class="film-details__comment" data-comment-id="${id}">
@@ -45,6 +45,8 @@ const createEmojiTemplate = (name) => {
 const createFilmDetailsTemplate = (film, comments) => {
   const {title, titleOriginal, poster, age, rating, genres, description, releaseDate, runtime, director, writers, actors, country, watchlist, history, favorites} = film;
 
+  const formatedRuntime = getFormatedNumber(runtime);
+
   const watchlistTemplate = createFilmControlTemplate(`watchlist`, watchlist);
   const watchedTemplate = createFilmControlTemplate(`watched`, history);
   const favoriteTemplate = createFilmControlTemplate(`favorite`, favorites, `favorites`);
@@ -61,9 +63,9 @@ const createFilmDetailsTemplate = (film, comments) => {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" src="./images/posters/${poster}" alt="">
+              <img class="film-details__poster-img" src="./${poster}" alt="">
     
-              <p class="film-details__age">${age}</p>
+              <p class="film-details__age">${age}+</p>
             </div>
     
             <div class="film-details__info">
@@ -97,7 +99,7 @@ const createFilmDetailsTemplate = (film, comments) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${runtime}</td>
+                  <td class="film-details__cell">${formatedRuntime}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>
@@ -169,8 +171,10 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   getCommentIdByEvent(evt) {
-    const index = evt.path.findIndex((it) => it.className === `film-details__comment`);
-    const elem = evt.path[index];
+    const path = evt.path || (evt.composedPath && evt.composedPath());
+
+    const index = path.findIndex((it) => it.className === `film-details__comment`);
+    const elem = path[index];
     const id = elem.dataset.commentId;
     return id;
   }
@@ -191,18 +195,24 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   setWatchlistClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`#watchlist`).addEventListener(`click`, handler);
     this._watchlistClickHandler = handler;
   }
 
   setWatchedClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`#watched`).addEventListener(`change`, handler);
     this._watchedClickHandler = handler;
   }
 
   setFavoriteClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, handler);
+    this.getElement().querySelector(`#favorite`).addEventListener(`change`, handler);
     this._favoriteClickHandler = handler;
+  }
+
+  setStatusDisabled(value) {
+    this.getElement().querySelector(`#watchlist`).disabled = value;
+    this.getElement().querySelector(`#watched`).disabled = value;
+    this.getElement().querySelector(`#favorite`).disabled = value;
   }
 
   setEmojiClickHandler(handler) {
@@ -235,8 +245,7 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   getNewCommentData() {
     const comment = this._parseData();
-    comment.text = encode(comment.text);
-    comment.author = `Movie Buff`;
+    comment.text = sanitizeHtml(comment.text);
     return comment;
   }
 
@@ -252,7 +261,7 @@ export default class FilmDetails extends AbstractSmartComponent {
   _parseData() {
     const result = {
       text: ``,
-      emoji: null,
+      emoji: `smile`,
       date: new Date(),
     };
     const newCommentElement = this.getElement().querySelector(`.film-details__new-comment`);
@@ -264,7 +273,6 @@ export default class FilmDetails extends AbstractSmartComponent {
         result.emoji = it.value;
       }
     });
-
     return result;
   }
 }

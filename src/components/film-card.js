@@ -1,8 +1,10 @@
 import {DESCRIPTION_PREVIEW_LENGTH} from "../const";
 import AbstractSmartComponent from "./abstract-smart-component";
+import {getFormatedNumber} from "../utils/common";
 
 const createFilmCardTemplate = (film) => {
   const {title, poster, rating, genres, description, releaseDate, runtime, comments, watchlist, history, favorites} = film;
+  const formatedRuntime = getFormatedNumber(runtime);
   const year = releaseDate.getFullYear();
   const activeClass = `film-card__controls-item--active`;
   const descriptionPreview = description.length > DESCRIPTION_PREVIEW_LENGTH ? `${description.substring(0, DESCRIPTION_PREVIEW_LENGTH - 1)}...` : description;
@@ -12,10 +14,10 @@ const createFilmCardTemplate = (film) => {
       <p class="film-card__rating">${rating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${year}</span>
-        <span class="film-card__duration">${runtime}</span>
+        <span class="film-card__duration">${formatedRuntime}</span>
         <span class="film-card__genre">${genres[0]}</span>
       </p>
-      <img src="./images/posters/${poster}" alt="" class="film-card__poster">
+      <img src="./${poster}" alt="" class="film-card__poster">
       <p class="film-card__description">${descriptionPreview}</p>
       <a class="film-card__comments">${comments.length} comments</a>
       <form class="film-card__controls">
@@ -69,5 +71,11 @@ export default class FilmCard extends AbstractSmartComponent {
 
   setFavoriteClickHandler(handler) {
     this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, handler);
+  }
+
+  setStatusDisabled(value) {
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).disabled = value;
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).disabled = value;
+    this.getElement().querySelector(`.film-card__controls-item--favorite`).disabled = value;
   }
 }

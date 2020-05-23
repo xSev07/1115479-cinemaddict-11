@@ -1,4 +1,4 @@
-import {SortType} from "../const";
+import {Rank, SortType} from "../const";
 import moment from "moment";
 
 export const getFormatedNumber = (number) => {
@@ -23,6 +23,9 @@ export const getFormatedCommentDate = (date) => {
 export const sortFilms = (films, sortType) => {
   let sortedFilms = films.slice();
   switch (sortType) {
+    case SortType.DEFAULT:
+      sortedFilms = sortedFilms.sort((a, b) => a.id - b.id);
+      break;
     case SortType.DATE:
       sortedFilms = sortedFilms.sort((a, b) => b.releaseDate - a.releaseDate);
       break;
@@ -50,4 +53,21 @@ export const isFavoritesFilm = (film) => {
 
 export const transformToFirstCapitalSymbol = (str) => {
   return `${str[0].toUpperCase()}${str.slice(1)}`;
+};
+
+export const getWatchedFilms = (films) => {
+  return films.filter((it) => it.history);
+};
+
+export const getProfileRank = (films) => {
+  let count = getWatchedFilms(films).length;
+  let rank = ``;
+  if (count > 0 && count <= 10) {
+    rank = Rank.LOW;
+  } else if (count > 10 && count <= 20) {
+    rank = Rank.MIDDLE;
+  } else if (count > 20) {
+    rank = Rank.HIGH;
+  }
+  return rank;
 };

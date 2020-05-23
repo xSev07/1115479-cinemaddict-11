@@ -51,7 +51,6 @@ export default class PageController {
 
     render(this._siteMainElement, this._statistic);
     this.hide(this._statistic);
-    this._statistic.createChart();
 
     render(this._siteFooterStatisticsElement, this._footerComponent);
 
@@ -106,9 +105,12 @@ export default class PageController {
 
     switch (page) {
       case Pages.STATISTIC:
+        this._statistic.setFilms(this._filmsModel.getFilmsAll());
+        this._statistic.rerender();
+        this._statistic.createChart();
         this.hide(this._sortComponent);
         this.hide(this._filmsComponent);
-        this.show(this._statistic);
+        // this.show(this._statistic);
         break;
       case Pages.FILMS:
         this._sortComponent.setSortType(SortType.DEFAULT);

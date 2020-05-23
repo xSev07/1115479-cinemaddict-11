@@ -1,6 +1,7 @@
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import AbstractSmartComponent from "./abstract-smart-component";
+import {getProfileRank, getWatchedFilms} from "../utils/common";
 
 const createChart = () => {
   const BAR_HEIGHT = 50;
@@ -69,12 +70,39 @@ const createChart = () => {
   return myChart;
 };
 
-const createStatisticTemplate = () => {
-  const rank = `Sci-Fighter`;
-  const count = 22;
-  const hours = 130;
-  const minutes = 22;
-  const genre = `Sci-Fi`;
+const getTopGenre = (films) => {
+  const allGenresRaw = films.map((it) => it.genres);
+  const allGenres = [].concat(...allGenresRaw);
+  const genresStatistic = allGenres.reduce((acc, it) => {
+    acc[it] = (acc[it] || 0) + 1;
+    return acc;
+  }, {});
+  const maxGenre = {
+    genre: ``,
+    count: 0
+  };
+  for (let key in genresStatistic) {
+    if ({}.hasOwnProperty.call(genresStatistic, key)) {
+      const currentValue = genresStatistic[key];
+      if (currentValue > maxGenre.count) {
+        maxGenre.genre = key;
+        maxGenre.count = currentValue;
+      }
+    }
+  }
+  return maxGenre.genre;
+};
+
+const createStatisticTemplate = (films) => {
+  const rank = getProfileRank(films);
+  const watchedFilms = getWatchedFilms(films);
+  const count = watchedFilms.length;
+  const watchedTime = watchedFilms.reduce((acc, it) => {
+    return acc + it.runtime;
+  }, 0);
+  const hours = Math.trunc(watchedTime / 60);
+  const minutes = watchedTime - hours * 60;
+  const genre = getTopGenre(watchedFilms);
   return (`
   <section class="statistic">
     <p class="statistic__rank">
@@ -128,6 +156,7 @@ const createStatisticTemplate = () => {
 export default class Statistic extends AbstractSmartComponent {
   constructor() {
     super();
+    this._films = [];
     this.clickHandler = null;
     this._statsChangeHandler = null;
     this.setClickHandler = this.setClickHandler.bind(this);
@@ -135,7 +164,11 @@ export default class Statistic extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createStatisticTemplate();
+    return createStatisticTemplate(this._films);
+  }
+
+  setFilms(films) {
+    this._films = films;
   }
 
   createChart() {
@@ -144,7 +177,7 @@ export default class Statistic extends AbstractSmartComponent {
 
   setClickHandler(handler) {
     this.getElement().querySelector(`.statistic`)
-      .addEventListener((evt) => {
+      .addEventListener(`click`, (evt) => {
         evt.preventDefault();
         handler();
       });
@@ -158,7 +191,7 @@ export default class Statistic extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
-    this.setClickHandler(this.clickHandler);
+    // this.setClickHandler(this.clickHandler);
     this.setStatsChangeHandler(this._statsChangeHandler);
   }
 }

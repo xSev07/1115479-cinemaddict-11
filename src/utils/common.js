@@ -52,8 +52,12 @@ export const transformToFirstCapitalSymbol = (str) => {
   return `${str[0].toUpperCase()}${str.slice(1)}`;
 };
 
+export const getWatchedFilms = (films) => {
+  return films.filter((it) => it.history);
+};
+
 export const getProfileRank = (films) => {
-  let count = films.filter((it) => it.history).length;
+  let count = getWatchedFilms(films).length;
   let rank = ``;
   if (count > 0 && count <= 10) {
     rank = Rank.LOW;

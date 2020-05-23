@@ -1,7 +1,7 @@
 import API from "../api";
 import {FilmsQuantity, NoDataStatus, Pages, SortType} from "../const";
 import {remove, render} from "../utils/render";
-import {sortFilms} from "../utils/common";
+import {getProfileRank, sortFilms} from "../utils/common";
 import Profile from "../components/profile";
 import Sort from "../components/sort";
 import Statistic from "../components/statistic";
@@ -84,8 +84,12 @@ export default class PageController {
     if (films.length === 0) {
       throw new Error(`No films in base`);
     }
+    const rank = getProfileRank(films);
     this._films = films;
     this._filmsModel.setFilms(films);
+    remove(this._profileComponent);
+    this._profileComponent.setRank(rank);
+    render(this._siteHeaderElement, this._profileComponent);
     this._filterController.render();
     remove(this._filmsNoData);
     render(this._siteMainElement, this._filmsComponent);

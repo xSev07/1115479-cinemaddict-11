@@ -53,3 +53,9 @@ export const NoDataStatus = {
   LOADING: `Loading...`,
   NO_DATA: `There are no movies in our database`,
 };
+
+export const Rank = {
+  LOW: `novice`,
+  MIDDLE: `fan`,
+  HIGH: `movie buff`,
+};

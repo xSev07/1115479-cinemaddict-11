@@ -246,7 +246,6 @@ export default class FilmDetails extends AbstractSmartComponent {
   getNewCommentData() {
     const comment = this._parseData();
     comment.text = sanitizeHtml(comment.text);
-    comment.author = `Movie Buff`;
     return comment;
   }
 
@@ -274,7 +273,6 @@ export default class FilmDetails extends AbstractSmartComponent {
         result.emoji = it.value;
       }
     });
-
     return result;
   }
 }

@@ -23,8 +23,8 @@ export default class PageController {
     this._siteMainElement = document.querySelector(`.main`);
     this._siteFooterStatisticsElement = document.querySelector(`.footer__statistics`);
     this._showingFilmsCount = FilmsQuantity.SHOWING_ON_START;
-    this._films = [];
-    this._sortedFilms = [];
+    // this._films = [];
+    // this._sortedFilms = [];
     this._filmsModel = new FilmsModel();
     this._profileComponent = new Profile();
     this._sortComponent = new Sort();
@@ -32,7 +32,7 @@ export default class PageController {
     // this._filmsController = new FilmsController(this._filmsComponent, this._filmsModel);
     this._filmsController = null;
     this._statistic = new Statistic();
-    this._footerComponent = new FooterStatistics(this._films.length);
+    this._footerComponent = new FooterStatistics(0);
     this._onPageChange = this._onPageChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
     this._sortComponent.setClickHandler(this._onSortTypeChange);
@@ -84,7 +84,7 @@ export default class PageController {
       throw new Error(`No films in base`);
     }
     const rank = getProfileRank(films);
-    this._films = films;
+    // this._films = films;
     this._filmsModel.setFilms(films);
     remove(this._profileComponent);
     this._profileComponent.setRank(rank);
@@ -125,8 +125,12 @@ export default class PageController {
 
   _onSortTypeChange(sortType) {
     this._sortComponent.rerender();
-    this._sortedFilms = sortFilms(this._films, sortType);
-    this._filmsController.renderFilmsAfterSorting(this._sortedFilms, 0, this._showingFilmsCount);
+    // this._sortedFilms = sortFilms(this._films, sortType);
+    // this._sortedFilms = sortFilms(this._filmsModel.getFilmsAll(), sortType);
+    const sortedFilms = sortFilms(this._filmsModel.getFilmsAll(), sortType);
+    this._filmsModel.setFilms(sortedFilms);
+    this._filmsController.renderFilmsAfterSorting(0, this._showingFilmsCount);
+    // this._filmsController.renderFilmsAfterSorting(this._sortedFilms, 0, this._showingFilmsCount);
   }
 
   // _onStatsChange(evt) {

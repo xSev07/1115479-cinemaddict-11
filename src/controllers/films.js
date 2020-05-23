@@ -28,12 +28,14 @@ export default class FilmsController {
     this._commentsModel = new CommentsModel(comments, this._onCommentChange);
   }
 
-  renderFilmsAfterSorting(films, start, finish) {
-    this._filmsModel.setFilms(films);
+  // renderFilmsAfterSorting(films, start, finish) {
+  renderFilmsAfterSorting(start, finish) {
+    // this._filmsModel.setFilms(films);
     this._showingFilmsCount = FilmsQuantity.SHOWING_ON_START;
     this._removeFilms();
     remove(this._showMoreButtonComponent);
     this._renderShowMoreButton();
+    // this._renderFilmsCards(this._filmsContainerElement, films, start, finish);
     this._renderFilmsCards(this._filmsContainerElement, this._filmsModel.getFilms(), start, finish);
   }
 

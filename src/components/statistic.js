@@ -3,20 +3,76 @@ import ChartDataLabels from "chartjs-plugin-datalabels";
 import AbstractSmartComponent from "./abstract-smart-component";
 import {getProfileRank, getWatchedFilms} from "../utils/common";
 
-const createChart = () => {
+const getGenresStatistic = (films) => {
+  const allGenresRaw = films.map((it) => it.genres);
+  const allGenres = [].concat(...allGenresRaw);
+  return allGenres.reduce((acc, it) => {
+    acc[it] = (acc[it] || 0) + 1;
+    return acc;
+  }, {});
+};
+
+const getTopGenre = (films) => {
+  const genresStatistic = getGenresStatistic(films);
+  const maxGenre = {
+    genre: ``,
+    count: 0
+  };
+  for (let key in genresStatistic) {
+    if ({}.hasOwnProperty.call(genresStatistic, key)) {
+      const currentValue = genresStatistic[key];
+      if (currentValue > maxGenre.count) {
+        maxGenre.genre = key;
+        maxGenre.count = currentValue;
+      }
+    }
+  }
+  return maxGenre.genre;
+};
+
+const getChartData = (films) => {
+  const watchedFilms = getWatchedFilms(films);
+  const genresStatistic = getGenresStatistic(watchedFilms);
+
+  const genresArray = [];
+  for (let key in genresStatistic) {
+    if ({}.hasOwnProperty.call(genresStatistic, key)) {
+      genresArray.push({
+        genre: key,
+        count: genresStatistic[key]
+      });
+    }
+  }
+  genresArray.sort((a, b) => b.count - a.count);
+  const result = {
+    labels: [],
+    data: []
+  };
+  genresArray.forEach((it) => {
+    result.labels.push(it.genre);
+    result.data.push(it.count);
+  });
+
+  return result;
+};
+
+const createChart = (films) => {
+  const chartData = getChartData(films);
+  if (chartData.labels.length === 0) {
+    return null;
+  }
   const BAR_HEIGHT = 50;
   const statisticCtx = document.querySelector(`.statistic__chart`);
 
-  // Обязательно рассчитайте высоту canvas, она зависит от количества элементов диаграммы
-  statisticCtx.height = BAR_HEIGHT * 5;
+  statisticCtx.height = BAR_HEIGHT * chartData.labels.length;
 
   const myChart = new Chart(statisticCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels: [`Sci-Fi`, `Animation`, `Fantasy`, `Comedy`, `TV Series`],
+      labels: chartData.labels,
       datasets: [{
-        data: [11, 8, 7, 4, 3],
+        data: chartData.data,
         backgroundColor: `#ffe800`,
         hoverBackgroundColor: `#ffe800`,
         anchor: `start`
@@ -66,31 +122,7 @@ const createChart = () => {
       }
     }
   });
-
   return myChart;
-};
-
-const getTopGenre = (films) => {
-  const allGenresRaw = films.map((it) => it.genres);
-  const allGenres = [].concat(...allGenresRaw);
-  const genresStatistic = allGenres.reduce((acc, it) => {
-    acc[it] = (acc[it] || 0) + 1;
-    return acc;
-  }, {});
-  const maxGenre = {
-    genre: ``,
-    count: 0
-  };
-  for (let key in genresStatistic) {
-    if ({}.hasOwnProperty.call(genresStatistic, key)) {
-      const currentValue = genresStatistic[key];
-      if (currentValue > maxGenre.count) {
-        maxGenre.genre = key;
-        maxGenre.count = currentValue;
-      }
-    }
-  }
-  return maxGenre.genre;
 };
 
 const createStatisticTemplate = (films) => {
@@ -172,7 +204,7 @@ export default class Statistic extends AbstractSmartComponent {
   }
 
   createChart() {
-    createChart();
+    createChart(this._films);
   }
 
   setClickHandler(handler) {

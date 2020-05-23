@@ -23,6 +23,9 @@ export const getFormatedCommentDate = (date) => {
 export const sortFilms = (films, sortType) => {
   let sortedFilms = films.slice();
   switch (sortType) {
+    case SortType.DEFAULT:
+      sortedFilms = sortedFilms.sort((a, b) => a.id - b.id);
+      break;
     case SortType.DATE:
       sortedFilms = sortedFilms.sort((a, b) => b.releaseDate - a.releaseDate);
       break;

@@ -1,7 +1,7 @@
 import API from "../api";
 import {FilmsQuantity, NoDataStatus, Pages, SortType} from "../const";
 import {remove, render} from "../utils/render";
-import {getProfileRank, sortFilms} from "../utils/common";
+import {getProfileRank, getWatchedFilmsByPeriod, sortFilms} from "../utils/common";
 import Profile from "../components/profile";
 import Sort from "../components/sort";
 import Statistic from "../components/statistic";
@@ -12,7 +12,7 @@ import FilterController from "../controllers/filter";
 import FooterStatistics from "../components/footer-statistics";
 import FilmsNoData from "../components/films-no-data";
 
-const AUTHORIZATION = `Basic gfjdoHFJDL59fdsfds7`;
+const AUTHORIZATION = `Basic gfjdoHFJDL59fdsfds72`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 const api = new API(END_POINT, AUTHORIZATION);
 
@@ -35,6 +35,7 @@ export default class PageController {
     this._footerComponent = new FooterStatistics(0);
     this._onPageChange = this._onPageChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
+    this._onStatsChange = this._onStatsChange.bind(this);
     this._sortComponent.setClickHandler(this._onSortTypeChange);
     this._filterController = new FilterController(this._siteMainElement, this._filmsModel, this._onPageChange);
     this._statistic.setStatsChangeHandler(this._onStatsChange);
@@ -84,7 +85,6 @@ export default class PageController {
       throw new Error(`No films in base`);
     }
     const rank = getProfileRank(films);
-    // this._films = films;
     this._filmsModel.setFilms(films);
     remove(this._profileComponent);
     this._profileComponent.setRank(rank);
@@ -125,16 +125,14 @@ export default class PageController {
 
   _onSortTypeChange(sortType) {
     this._sortComponent.rerender();
-    // this._sortedFilms = sortFilms(this._films, sortType);
-    // this._sortedFilms = sortFilms(this._filmsModel.getFilmsAll(), sortType);
     const sortedFilms = sortFilms(this._filmsModel.getFilmsAll(), sortType);
     this._filmsModel.setFilms(sortedFilms);
     this._filmsController.renderFilmsAfterSorting(0, this._showingFilmsCount);
-    // this._filmsController.renderFilmsAfterSorting(this._sortedFilms, 0, this._showingFilmsCount);
   }
 
-  // _onStatsChange(evt) {
-  _onStatsChange() {
-    // console.log(evt.target.value);
+  _onStatsChange(evt) {
+    const filmsByPeriod = getWatchedFilmsByPeriod(this._filmsModel.getFilmsAll(), evt.target.value);
+    this._statistic.setFilms(filmsByPeriod);
+    this._statistic.rerender();
   }
 }

@@ -108,6 +108,7 @@ export default class FilmsController {
     }
     this._api.updateFilm(oldData.id, newData)
       .then((filmModel) => {
+        debugger
         const isSuccess = this._filmsModel.updateFilm(oldData.id, filmModel);
         if (isSuccess) {
           this._showedFilmController[controllerIndex].render(newData);

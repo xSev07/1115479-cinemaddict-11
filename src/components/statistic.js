@@ -58,9 +58,6 @@ const getChartData = (films) => {
 
 const createChart = (films) => {
   const chartData = getChartData(films);
-  if (chartData.labels.length === 0) {
-    return null;
-  }
   const BAR_HEIGHT = 50;
   const statisticCtx = document.querySelector(`.statistic__chart`);
 
@@ -189,9 +186,8 @@ export default class Statistic extends AbstractSmartComponent {
   constructor() {
     super();
     this._films = [];
-    this.clickHandler = null;
+    this._chart = null;
     this._statsChangeHandler = null;
-    this.setClickHandler = this.setClickHandler.bind(this);
     this.setStatsChangeHandler = this.setStatsChangeHandler.bind(this);
   }
 
@@ -204,16 +200,7 @@ export default class Statistic extends AbstractSmartComponent {
   }
 
   createChart() {
-    createChart(this._films);
-  }
-
-  setClickHandler(handler) {
-    this.getElement().querySelector(`.statistic`)
-      .addEventListener(`click`, (evt) => {
-        evt.preventDefault();
-        handler();
-      });
-    this.clickHandler = handler;
+    this._chart = createChart(this._films);
   }
 
   setStatsChangeHandler(handler) {
@@ -222,8 +209,16 @@ export default class Statistic extends AbstractSmartComponent {
     this._statsChangeHandler = handler;
   }
 
+  rerender() {
+    super.rerender();
+    if (this._chart) {
+      this._chart.destroy();
+      this._chart = null;
+      this.createChart();
+    }
+  }
+
   recoveryListeners() {
-    // this.setClickHandler(this.clickHandler);
     this.setStatsChangeHandler(this._statsChangeHandler);
   }
 }

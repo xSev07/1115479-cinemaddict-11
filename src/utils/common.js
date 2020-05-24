@@ -71,3 +71,24 @@ export const getProfileRank = (films) => {
   }
   return rank;
 };
+
+export const getWatchedFilmsByPeriod = (films, period) => {
+  const watchedFilms = getWatchedFilms(films);
+  let targetDate = new Date();
+  switch (period) {
+    case `today`:
+
+      break;
+    case `week`:
+      targetDate.setDate(targetDate.getDay() - 6);
+      break;
+    case `month`:
+      targetDate.setMonth(targetDate.getMonth() - 1);
+      break;
+    case `year`:
+      targetDate.setFullYear(targetDate.getFullYear() - 1);
+      break;
+  }
+  targetDate.setHours(0, 0, 0);
+  return watchedFilms.filter((it) => it.watchingDate >= targetDate);
+};

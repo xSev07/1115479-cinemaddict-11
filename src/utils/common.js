@@ -1,4 +1,4 @@
-import {Rank, SortType} from "../const";
+import {Period, Rank, SortType} from "../const";
 import moment from "moment";
 
 export const getFormatedNumber = (number) => {
@@ -76,16 +76,18 @@ export const getWatchedFilmsByPeriod = (films, period) => {
   const watchedFilms = getWatchedFilms(films);
   let targetDate = new Date();
   switch (period) {
-    case `today`:
-
+    case Period.ALL:
+      targetDate = new Date(0);
       break;
-    case `week`:
+    case Period.TODAY:
+      break;
+    case Period.WEEK:
       targetDate.setDate(targetDate.getDay() - 6);
       break;
-    case `month`:
+    case Period.MONTH:
       targetDate.setMonth(targetDate.getMonth() - 1);
       break;
-    case `year`:
+    case Period.YEAR:
       targetDate.setFullYear(targetDate.getFullYear() - 1);
       break;
   }

@@ -59,3 +59,11 @@ export const Rank = {
   MIDDLE: `fan`,
   HIGH: `movie buff`,
 };
+
+export const Period = {
+  ALL: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`,
+};

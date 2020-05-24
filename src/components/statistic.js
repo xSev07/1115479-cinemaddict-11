@@ -1,7 +1,16 @@
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import AbstractSmartComponent from "./abstract-smart-component";
-import {getProfileRank, getWatchedFilms} from "../utils/common";
+import {getWatchedFilms, transformToFirstCapitalSymbol} from "../utils/common";
+import {Period} from "../const";
+
+const periods = [
+  `all-time`,
+  `today`,
+  `week`,
+  `month`,
+  `year`
+];
 
 const getGenresStatistic = (films) => {
   const allGenresRaw = films.map((it) => it.genres);
@@ -122,8 +131,15 @@ const createChart = (films) => {
   return myChart;
 };
 
-const createStatisticTemplate = (films) => {
-  const rank = getProfileRank(films);
+const createPeriodTemplate = (period, activePeriod) => {
+  const periodName = transformToFirstCapitalSymbol(period).replace(`-`, ` `);
+  return (`
+    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-${period}" value="${period}" ${period === activePeriod ? `checked` : ``}>
+    <label for="statistic-${period}" class="statistic__filters-label">${periodName}</label>
+  `);
+};
+
+const createStatisticTemplate = (films, activePeriod, rank) => {
   const watchedFilms = getWatchedFilms(films);
   const count = watchedFilms.length;
   const watchedTime = watchedFilms.reduce((acc, it) => {
@@ -132,6 +148,9 @@ const createStatisticTemplate = (films) => {
   const hours = Math.trunc(watchedTime / 60);
   const minutes = watchedTime - hours * 60;
   const genre = getTopGenre(watchedFilms);
+
+  const periodsTemplate = periods.map((it) => createPeriodTemplate(it, activePeriod)).join(`\n`);
+
   return (`
   <section class="statistic">
     <p class="statistic__rank">
@@ -143,20 +162,7 @@ const createStatisticTemplate = (films) => {
     <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
       <p class="statistic__filters-description">Show stats:</p>
 
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" checked="">
-      <label for="statistic-all-time" class="statistic__filters-label">All time</label>
-
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today" value="today">
-      <label for="statistic-today" class="statistic__filters-label">Today</label>
-
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week" value="week">
-      <label for="statistic-week" class="statistic__filters-label">Week</label>
-
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="month">
-      <label for="statistic-month" class="statistic__filters-label">Month</label>
-
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="year">
-      <label for="statistic-year" class="statistic__filters-label">Year</label>
+      ${periodsTemplate}
     </form>
 
     <ul class="statistic__text-list">
@@ -187,16 +193,26 @@ export default class Statistic extends AbstractSmartComponent {
     super();
     this._films = [];
     this._chart = null;
+    this._rank = ``;
+    this._period = Period.ALL;
     this._statsChangeHandler = null;
     this.setStatsChangeHandler = this.setStatsChangeHandler.bind(this);
   }
 
   getTemplate() {
-    return createStatisticTemplate(this._films);
+    return createStatisticTemplate(this._films, this._period, this._rank);
   }
 
   setFilms(films) {
     this._films = films;
+  }
+
+  setPeriod(period) {
+    this._period = period;
+  }
+
+  setRank(rank) {
+    this._rank = rank;
   }
 
   createChart() {
@@ -214,8 +230,8 @@ export default class Statistic extends AbstractSmartComponent {
     if (this._chart) {
       this._chart.destroy();
       this._chart = null;
-      this.createChart();
     }
+    this.createChart();
   }
 
   recoveryListeners() {

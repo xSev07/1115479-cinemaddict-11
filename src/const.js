@@ -42,6 +42,8 @@ export const FilterType = {
 
 export const KeyCode = {
   ENTER: 13,
+  ESC: `Esc`,
+  ESCAPE: `Escape`,
 };
 
 export const Pages = {

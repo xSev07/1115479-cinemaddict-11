@@ -140,7 +140,7 @@ export default class FilmController {
   }
 
   _onEscKeyDown(evt) {
-    const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
+    const isEscKey = evt.key === KeyCode.ESCAPE || evt.key === KeyCode.ESC;
     if (isEscKey) {
       this._closeFilmDetails();
     }

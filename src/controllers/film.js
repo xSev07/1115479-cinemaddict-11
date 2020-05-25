@@ -7,6 +7,12 @@ import Comment from "../models/comment";
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
 
+const FilmStatus = {
+  WATCHLIST: `watchlist`,
+  WATCHED: `history`,
+  FAVORITE: `favorites`
+};
+
 export default class FilmController {
   constructor(container, containerDetails, api, changeFunctions) {
     this._container = container;
@@ -22,7 +28,7 @@ export default class FilmController {
     this._closeFilmDetails = this._closeFilmDetails.bind(this);
   }
 
-  render(film, commentsModel) {
+  render(film, commentsModel, close = true) {
     this._film = film;
     const oldFilmComponent = this._filmComponent;
     const oldFilmDetailsComponent = this._filmDetailsComponent;
@@ -45,7 +51,9 @@ export default class FilmController {
       replace(this._filmComponent, oldFilmComponent);
       replace(this._filmDetailsComponent, oldFilmDetailsComponent);
     } else {
-      this._onViewChange();
+      if (close) {
+        this._onViewChange();
+      }
       render(this._container, this._filmComponent);
     }
   }
@@ -87,13 +95,16 @@ export default class FilmController {
     evt.preventDefault();
     const newFilm = Film.clone(film);
     newFilm[propertyName] = !newFilm[propertyName];
+    if (propertyName === FilmStatus.WATCHED) {
+      newFilm.watchingDate = newFilm[propertyName] ? new Date() : new Date(0);
+    }
     this._onDataChange(film, newFilm);
   }
 
   _setStatusClickHandlers(component, film) {
-    component.setWatchlistClickHandler((evt) => this._onDataUpdate(evt, film, `watchlist`));
-    component.setWatchedClickHandler((evt) => this._onDataUpdate(evt, film, `history`));
-    component.setFavoriteClickHandler((evt) => this._onDataUpdate(evt, film, `favorites`));
+    component.setWatchlistClickHandler((evt) => this._onDataUpdate(evt, film, FilmStatus.WATCHLIST));
+    component.setWatchedClickHandler((evt) => this._onDataUpdate(evt, film, FilmStatus.WATCHED));
+    component.setFavoriteClickHandler((evt) => this._onDataUpdate(evt, film, FilmStatus.FAVORITE));
   }
 
   _onEmojiClick() {

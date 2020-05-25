@@ -126,12 +126,16 @@ export default class FilmController {
   _onCommentDelete() {
     this._filmDetailsComponent.setDeleteButtonsClickHandler((evt) => {
       evt.preventDefault();
+      this._filmDetailsComponent.setCommentDeleteButtonDisabled(evt.target, true);
       const commentId = this._filmDetailsComponent.getCommentIdByEvent(evt);
       this._api.deleteComment(commentId)
         .then(() => {
           this._commentsModel.removeComment(commentId);
         })
-        .catch(() => console.log(`реализовать ошибки при удалении комментария`));
+        .catch(() => {
+          this._filmDetailsComponent.setCommentDeleteButtonDisabled(evt.target, false);
+          this.shake();
+        });
     });
   }
 

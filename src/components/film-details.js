@@ -231,6 +231,11 @@ export default class FilmDetails extends AbstractSmartComponent {
       });
   }
 
+  setCommentDeleteButtonDisabled(button, value) {
+    button.innerHTML = value ? `Deleting...` : `Delete`;
+    button.disabled = value;
+  }
+
   setEmojiClickHandler(handler) {
     this.getElement().querySelectorAll(`.film-details__emoji-item`)
       .forEach((it) => it.addEventListener(`change`, handler));

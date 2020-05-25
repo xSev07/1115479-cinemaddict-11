@@ -23,6 +23,14 @@ export default class FilmsModel {
     return this._films;
   }
 
+  setFilter(filterType) {
+    if (this._activeFilterType === filterType) {
+      return;
+    }
+    this._activeFilterType = filterType;
+    this._callHandlers(this._filterChangeHandlers);
+  }
+
   removeComment(id) {
     let newFilm = null;
     this._films.forEach((film) => {
@@ -42,14 +50,6 @@ export default class FilmsModel {
     return film;
   }
 
-  setFilter(filterType) {
-    if (this._activeFilterType === filterType) {
-      return;
-    }
-    this._activeFilterType = filterType;
-    this._callHandlers(this._filterChangeHandlers);
-  }
-
   updateFilm(id, film) {
     const index = this._films.findIndex((it) => it.id === id);
 
@@ -64,15 +64,15 @@ export default class FilmsModel {
     return true;
   }
 
+  _callHandlers(handlers) {
+    handlers.forEach((handler) => handler());
+  }
+
   setDataChangeHandler(handler) {
     this._dataChangeHandlers.push(handler);
   }
 
   setFilterChangeHandler(handler) {
     this._filterChangeHandlers.push(handler);
-  }
-
-  _callHandlers(handlers) {
-    handlers.forEach((handler) => handler());
   }
 }

@@ -14,7 +14,7 @@ const getFavoritesFilms = (films) => {
   return films.filter((it) => isFavoritesFilm(it));
 };
 
-export const getFilmsByFilter = (films, filterType) => {
+const getFilmsByFilter = (films, filterType) => {
   switch (filterType) {
     case FilterType.ALL:
       return films;
@@ -27,3 +27,5 @@ export const getFilmsByFilter = (films, filterType) => {
   }
   return films;
 };
+
+export {getFilmsByFilter};

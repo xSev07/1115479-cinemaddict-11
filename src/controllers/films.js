@@ -1,4 +1,4 @@
-import {PlaceInsert, remove, render, replace} from "../utils/render";
+import {PlaceInsert, remove, render} from "../utils/render";
 import {sortFilms} from "../utils/common";
 import FilmController from "./film";
 import {AdditionalCategory, CommentMode, FilmsQuantity, SortType} from "../const";

@@ -154,15 +154,15 @@ const createFilmDetailsTemplate = (film, comments) => {
 export default class FilmDetails extends AbstractSmartComponent {
   constructor(film, comments) {
     super();
-    this._film = film;
     this._comments = comments;
+    this._film = film;
     this._commentSubmitHandler = null;
     this._closeClickHandler = null;
-    this._deleteButtonsClickHandler = null;
     this._emojiClickHandler = null;
-    this._favoriteClickHandler = null;
-    this._watchedClickHandler = null;
+    this._deleteButtonsClickHandler = null;
     this._watchlistClickHandler = null;
+    this._watchedClickHandler = null;
+    this._favoriteClickHandler = null;
   }
 
   getTemplate() {

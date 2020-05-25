@@ -36,7 +36,7 @@ const createEmojiTemplate = (name) => {
   return (`
     <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${name}" value="${name}">
     <label class="film-details__emoji-label" for="emoji-${name}">
-      <img src="./images/emoji/${name}.png" width="30" height="30" alt="emoji" data-emoji-name="${name}">
+      <img src="./images/emoji/${name}.png" width="30" height="30" alt="emoji">
     </label>  
   `);
 };
@@ -216,16 +216,13 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   setEmojiClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`click`, handler);
+    this.getElement().querySelectorAll(`.film-details__emoji-item`)
+      .forEach((it) => it.addEventListener(`change`, handler));
     this._emojiClickHandler = handler;
   }
 
   setEmoji(evt) {
-    if (evt.target.tagName !== `IMG`) {
-      return;
-    }
-
-    const selectedEmoji = evt.target.dataset.emojiName;
+    const selectedEmoji = evt.target.id.replace(`emoji-`, ``);
 
     const selectedEmojiElement = this.getElement().querySelector(`.film-details__add-emoji-label`);
     selectedEmojiElement.innerHTML = `<img src="images/emoji/${selectedEmoji}.png" width="55" height="55" alt="emoji-${selectedEmoji}">`;

@@ -1,17 +1,19 @@
 import {remove, render, replace} from "../utils/render";
 import FilmCard from "../components/film-card";
 import FilmDetails from "../components/film-details";
-import {KeyCode} from "../const";
+import {CommentMode, KeyCode} from "../const";
 import Film from "../models/film";
+import Comment from "../models/comment";
 
 export default class FilmController {
-  constructor(container, containerDetails, changeFunctions) {
+  constructor(container, containerDetails, api, changeFunctions) {
     this._container = container;
     this._containerDetails = containerDetails;
     this._onDataChange = changeFunctions.FILM_DATA;
     this._onCommentChange = changeFunctions.COMMENT_DATA;
     this._onViewChange = changeFunctions.VIEW;
     this._displayed = false;
+    this._api = api;
 
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
     this._openFilmDetails = this._openFilmDetails.bind(this);
@@ -46,8 +48,8 @@ export default class FilmController {
     }
   }
 
-  compareFilmData(filmData) {
-    return this._filmComponent.getFilmData().id === filmData.id;
+  compareFilmData(id) {
+    return this._filmComponent.getFilmData().id === id;
   }
 
   setDefaultView() {
@@ -91,8 +93,13 @@ export default class FilmController {
   _onCommentSubmit() {
     this._filmDetailsComponent.setCommentSubmitHandler((evt) => {
       if (evt.ctrlKey && evt.keyCode === KeyCode.ENTER) {
-        const newComment = this._filmDetailsComponent.getNewCommentData();
-        this._onCommentChange(newComment, this._film);
+        const newCommentData = this._filmDetailsComponent.getNewCommentData();
+        const newComment = new Comment(newCommentData);
+
+        this._api.createComment(newComment, this._film.id)
+          .then((response) => {
+            this._onCommentChange(response.comments[response.comments.length - 1], response.film, CommentMode.ADD);
+          });
       }
     });
   }
@@ -101,7 +108,11 @@ export default class FilmController {
     this._filmDetailsComponent.setDeleteButtonsClickHandler((evt) => {
       evt.preventDefault();
       const commentId = this._filmDetailsComponent.getCommentIdByEvent(evt);
-      this._commentsModel.removeComment(commentId);
+      this._api.deleteComment(commentId)
+        .then(() => {
+          this._commentsModel.removeComment(commentId);
+        })
+        .catch(() => console.log(`реализовать ошибки при удалении комментария`));
     });
   }
 

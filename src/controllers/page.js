@@ -1,6 +1,6 @@
 import API from "../api";
 import {FilmsQuantity, NoDataStatus, Pages, SortType} from "../const";
-import {remove, render, replace} from "../utils/render";
+import {remove, render} from "../utils/render";
 import {getProfileRank, getWatchedFilmsByPeriod, sortFilms} from "../utils/common";
 import Profile from "../components/profile";
 import Sort from "../components/sort";

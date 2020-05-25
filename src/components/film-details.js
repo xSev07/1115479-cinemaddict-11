@@ -245,7 +245,7 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   getNewCommentData() {
     const comment = this._parseData();
-    comment.text = sanitizeHtml(comment.text);
+    comment.comment = sanitizeHtml(comment.comment);
     return comment;
   }
 
@@ -260,17 +260,17 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   _parseData() {
     const result = {
-      text: ``,
-      emoji: `smile`,
+      comment: ``,
+      emotion: `smile`,
       date: new Date(),
     };
     const newCommentElement = this.getElement().querySelector(`.film-details__new-comment`);
     const commentTextElement = newCommentElement.querySelector(`.film-details__comment-input`);
     const allEmojis = newCommentElement.querySelectorAll(`.film-details__emoji-item`);
-    result.text = commentTextElement.value;
+    result.comment = commentTextElement.value;
     allEmojis.forEach((it) => {
       if (it.checked) {
-        result.emoji = it.value;
+        result.emotion = it.value;
       }
     });
     return result;

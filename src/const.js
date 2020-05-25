@@ -67,3 +67,8 @@ export const Period = {
   MONTH: `month`,
   YEAR: `year`,
 };
+
+export const CommentMode = {
+  ADD: `adding`,
+  DELETE: `deleting`
+};

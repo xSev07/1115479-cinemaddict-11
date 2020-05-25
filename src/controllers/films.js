@@ -1,7 +1,7 @@
 import {PlaceInsert, remove, render} from "../utils/render";
 import {sortFilms} from "../utils/common";
 import FilmController from "./film";
-import {AdditionalCategory, FilmsQuantity, SortType} from "../const";
+import {AdditionalCategory, CommentMode, FilmsQuantity, SortType} from "../const";
 import ShowMoreButton from "../components/show-more-button";
 import FilmsExtra from "../components/films-extra";
 import CommentsModel from "../models/comments";
@@ -48,7 +48,7 @@ export default class FilmsController {
   _renderFilmsCards(element, array, start = 0, finish = array.length, additional = false) {
     const newFilms = array.slice(start, finish)
       .map((film) => {
-        const filmController = new FilmController(element, siteFooterElement, this._getChangeFunctions());
+        const filmController = new FilmController(element, siteFooterElement, this._api, this._getChangeFunctions());
         filmController.render(film, this._commentsModel);
         return filmController;
       });
@@ -97,40 +97,55 @@ export default class FilmsController {
   }
 
   _onDataChange(oldData, newData) {
-    const controllerIndex = this._showedFilmController.findIndex((it) => it.compareFilmData(oldData));
-    const controllerAdditionalIndex = this._showedAdditionalFilmController.findIndex((it) => it.compareFilmData(oldData));
-    this._showedFilmController[controllerIndex].setStatusDisabled(true);
-    if (controllerAdditionalIndex !== -1) {
-      this._showedAdditionalFilmController[controllerAdditionalIndex].setStatusDisabled(true);
+    const Index = this._getFilmIndexInControllers(oldData.id);
+    this._showedFilmController[Index.base].setStatusDisabled(true);
+    if (Index.additional !== -1) {
+      this._showedAdditionalFilmController[Index.additional].setStatusDisabled(true);
     }
     this._api.updateFilm(oldData.id, newData)
-      .then((filmModel) => {
-        const isSuccess = this._filmsModel.updateFilm(oldData.id, filmModel);
+      .then((film) => {
+        const isSuccess = this._filmsModel.updateFilm(oldData.id, film);
         if (isSuccess) {
-          this._showedFilmController[controllerIndex].render(newData);
-
-          if (controllerAdditionalIndex !== -1) {
-            this._showedAdditionalFilmController[controllerAdditionalIndex].render(newData);
-          }
+          this._renderUpdatedFilm(film, Index);
         }
       })
       .catch(() => {
-        this._showedFilmController[controllerIndex].setStatusDisabled(false);
-        if (controllerAdditionalIndex !== -1) {
-          this._showedAdditionalFilmController[controllerAdditionalIndex].setStatusDisabled(false);
+        this._showedFilmController[Index.base].setStatusDisabled(false);
+        if (Index.additional !== -1) {
+          this._showedAdditionalFilmController[Index.additional].setStatusDisabled(false);
         }
       });
   }
 
-  _onCommentChange(comment, film) {
-    let newFilm;
-    if (!comment.id) {
-      this._commentsModel.addComment(comment);
-      newFilm = this._filmsModel.addComment(film.id, comment.id);
-    } else {
-      newFilm = this._filmsModel.removeComment(comment.id);
+  _getFilmIndexInControllers(id) {
+    return {
+      base: this._showedFilmController.findIndex((it) => it.compareFilmData(id)),
+      additional: this._showedAdditionalFilmController.findIndex((it) => it.compareFilmData(id))
+    };
+  }
+
+  _renderUpdatedFilm(film, Index) {
+    this._showedFilmController[Index.base].render(film);
+
+    if (Index.additional !== -1) {
+      this._showedAdditionalFilmController[Index.additional].render(film);
     }
-    this._onDataChange({id: newFilm.id}, newFilm);
+  }
+
+  _onCommentChange(comment, film, mode) {
+    let targetFilm = film;
+    switch (mode) {
+      case CommentMode.ADD:
+        this._commentsModel.addComment(comment);
+        this._filmsModel.addComment(film.id, comment.id);
+        break;
+      case CommentMode.DELETE:
+        targetFilm = this._filmsModel.removeComment(comment.id);
+        break;
+    }
+
+    const Index = this._getFilmIndexInControllers(targetFilm.id);
+    this._renderUpdatedFilm(targetFilm, Index);
   }
 
   _onViewChange() {

@@ -215,6 +215,22 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.getElement().querySelector(`#favorite`).disabled = value;
   }
 
+  setCommentError(value) {
+    if (value) {
+      this.getElement().querySelector(`.film-details__comment-input`).classList.add(`film-details__comment-input--error`);
+    } else {
+      this.getElement().querySelector(`.film-details__comment-input`).classList.remove(`film-details__comment-input--error`);
+    }
+  }
+
+  setNewCommentFormDisabled(value) {
+    this.getElement().querySelector(`.film-details__comment-input`).disabled = value;
+    this.getElement().querySelectorAll(`.film-details__emoji-item`)
+      .forEach((it) => {
+        it.disabled = value;
+      });
+  }
+
   setEmojiClickHandler(handler) {
     this.getElement().querySelectorAll(`.film-details__emoji-item`)
       .forEach((it) => it.addEventListener(`change`, handler));

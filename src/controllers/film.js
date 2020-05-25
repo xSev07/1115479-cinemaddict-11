@@ -5,6 +5,8 @@ import {CommentMode, KeyCode} from "../const";
 import Film from "../models/film";
 import Comment from "../models/comment";
 
+const SHAKE_ANIMATION_TIMEOUT = 600;
+
 export default class FilmController {
   constructor(container, containerDetails, api, changeFunctions) {
     this._container = container;
@@ -71,6 +73,16 @@ export default class FilmController {
     this._filmDetailsComponent.setStatusDisabled(value);
   }
 
+  shake() {
+    this._filmComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+    this._filmDetailsComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._filmComponent.getElement().style.animation = ``;
+      this._filmDetailsComponent.getElement().style.animation = ``;
+    }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
   _onDataUpdate(evt, film, propertyName) {
     evt.preventDefault();
     const newFilm = Film.clone(film);
@@ -93,19 +105,19 @@ export default class FilmController {
   _onCommentSubmit() {
     this._filmDetailsComponent.setCommentSubmitHandler((evt) => {
       if (evt.ctrlKey && evt.keyCode === KeyCode.ENTER) {
+        this._filmDetailsComponent.setNewCommentFormDisabled(true);
+        this._filmDetailsComponent.setCommentError(false);
         const newCommentData = this._filmDetailsComponent.getNewCommentData();
         const newComment = new Comment(newCommentData);
-
-        // заблокировать форму
 
         this._api.createComment(newComment, this._film.id)
           .then((response) => {
             this._onCommentChange(response.comments[response.comments.length - 1], response.film, CommentMode.ADD);
           })
           .catch(() => {
-            // разблокировать форму
-            // покачивание головой
-            // красная обводка форме ввода
+            this._filmDetailsComponent.setNewCommentFormDisabled(false);
+            this._filmDetailsComponent.setCommentError(true);
+            this.shake();
           });
       }
     });

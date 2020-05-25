@@ -85,7 +85,6 @@ export default class FilmsController {
   }
 
   _renderExtraFilms() {
-    this._showedAdditionalFilmController.forEach((it) => it.destroy());
     this._showedAdditionalFilmController = [];
     if (this._filmsExtraRateComponent) {
       remove(this._filmsExtraRateComponent);
@@ -145,7 +144,9 @@ export default class FilmsController {
   }
 
   _renderUpdatedFilm(film, index) {
-    this._showedFilmController[index.base].render(film);
+    if (index.base !== -1) {
+      this._showedFilmController[index.base].render(film);
+    }
 
     if (index.additional !== -1) {
       this._showedAdditionalFilmController[index.additional].render(film);

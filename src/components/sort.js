@@ -26,6 +26,10 @@ export default class Sort extends AbstractSmartComponent {
     return createSortTemplate(this._currentSortType);
   }
 
+  recoveryListeners() {
+    this.setClickHandler(this._sortClickHandler);
+  }
+
   setClickHandler(handler) {
     this._sortClickHandler = handler;
     this.getElement().addEventListener(`click`, (evt) => {
@@ -44,9 +48,5 @@ export default class Sort extends AbstractSmartComponent {
       this._currentSortType = sortType;
       handler(this._currentSortType);
     });
-  }
-
-  recoveryListeners() {
-    this.setClickHandler(this._sortClickHandler);
   }
 }

@@ -156,14 +156,13 @@ export default class FilmDetails extends AbstractSmartComponent {
     super();
     this._film = film;
     this._comments = comments;
-    this._closeClickHandler = null;
-    this._watchlistClickHandler = null;
-    this._watchedClickHandler = null;
-    this._favoriteClickHandler = null;
-    this._emojiClickHandler = null;
     this._commentSubmitHandler = null;
-
+    this._closeClickHandler = null;
     this._deleteButtonsClickHandler = null;
+    this._emojiClickHandler = null;
+    this._favoriteClickHandler = null;
+    this._watchedClickHandler = null;
+    this._watchlistClickHandler = null;
   }
 
   getTemplate() {
@@ -179,6 +178,12 @@ export default class FilmDetails extends AbstractSmartComponent {
     return id;
   }
 
+  getNewCommentData() {
+    const comment = this._parseData();
+    comment.comment = sanitizeHtml(comment.comment);
+    return comment;
+  }
+
   recoveryListeners() {
     this.setCloseClickHandler(this._closeClickHandler);
     this.setWatchlistClickHandler(this._watchlistClickHandler);
@@ -189,24 +194,13 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.setCommentSubmitHandler(this._commentSubmitHandler);
   }
 
-  setCloseClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
-    this._closeClickHandler = handler;
-  }
-
-  setWatchlistClickHandler(handler) {
-    this.getElement().querySelector(`#watchlist`).addEventListener(`click`, handler);
-    this._watchlistClickHandler = handler;
-  }
-
-  setWatchedClickHandler(handler) {
-    this.getElement().querySelector(`#watched`).addEventListener(`click`, handler);
-    this._watchedClickHandler = handler;
-  }
-
-  setFavoriteClickHandler(handler) {
-    this.getElement().querySelector(`#favorite`).addEventListener(`click`, handler);
-    this._favoriteClickHandler = handler;
+  clearNewComment() {
+    const element = this.getElement();
+    element.querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
+    element.querySelector(`.film-details__comment-input`).value = ``;
+    element.querySelectorAll(`.film-details__emoji-item`).forEach((it) => {
+      it.checked = false;
+    });
   }
 
   setStatusDisabled(value) {
@@ -236,44 +230,11 @@ export default class FilmDetails extends AbstractSmartComponent {
     button.disabled = value;
   }
 
-  setEmojiClickHandler(handler) {
-    this.getElement().querySelectorAll(`.film-details__emoji-item`)
-      .forEach((it) => it.addEventListener(`change`, handler));
-    this._emojiClickHandler = handler;
-  }
-
   setEmoji(evt) {
     const selectedEmoji = evt.target.id.replace(`emoji-`, ``);
 
     const selectedEmojiElement = this.getElement().querySelector(`.film-details__add-emoji-label`);
     selectedEmojiElement.innerHTML = `<img src="images/emoji/${selectedEmoji}.png" width="55" height="55" alt="emoji-${selectedEmoji}">`;
-  }
-
-  setDeleteButtonsClickHandler(handler) {
-    this.getElement().querySelectorAll(`.film-details__comment-delete`)
-      .forEach((it) => it.addEventListener(`click`, handler));
-    this._deleteButtonsClickHandler = handler;
-  }
-
-  setCommentSubmitHandler(handler) {
-    this.getElement().querySelector(`.film-details__comment-input`)
-      .addEventListener(`keydown`, handler);
-    this._commentSubmitHandler = handler;
-  }
-
-  getNewCommentData() {
-    const comment = this._parseData();
-    comment.comment = sanitizeHtml(comment.comment);
-    return comment;
-  }
-
-  clearNewComment() {
-    const element = this.getElement();
-    element.querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
-    element.querySelector(`.film-details__comment-input`).value = ``;
-    element.querySelectorAll(`.film-details__emoji-item`).forEach((it) => {
-      it.checked = false;
-    });
   }
 
   _parseData() {
@@ -292,5 +253,43 @@ export default class FilmDetails extends AbstractSmartComponent {
       }
     });
     return result;
+  }
+
+  setCloseClickHandler(handler) {
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, handler);
+    this._closeClickHandler = handler;
+  }
+
+  setWatchlistClickHandler(handler) {
+    this.getElement().querySelector(`#watchlist`).addEventListener(`click`, handler);
+    this._watchlistClickHandler = handler;
+  }
+
+  setWatchedClickHandler(handler) {
+    this.getElement().querySelector(`#watched`).addEventListener(`click`, handler);
+    this._watchedClickHandler = handler;
+  }
+
+  setFavoriteClickHandler(handler) {
+    this.getElement().querySelector(`#favorite`).addEventListener(`click`, handler);
+    this._favoriteClickHandler = handler;
+  }
+
+  setEmojiClickHandler(handler) {
+    this.getElement().querySelectorAll(`.film-details__emoji-item`)
+      .forEach((it) => it.addEventListener(`change`, handler));
+    this._emojiClickHandler = handler;
+  }
+
+  setDeleteButtonsClickHandler(handler) {
+    this.getElement().querySelectorAll(`.film-details__comment-delete`)
+      .forEach((it) => it.addEventListener(`click`, handler));
+    this._deleteButtonsClickHandler = handler;
+  }
+
+  setCommentSubmitHandler(handler) {
+    this.getElement().querySelector(`.film-details__comment-input`)
+      .addEventListener(`keydown`, handler);
+    this._commentSubmitHandler = handler;
   }
 }

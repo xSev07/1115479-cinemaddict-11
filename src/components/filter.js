@@ -35,10 +35,6 @@ export default class FilterComponent extends AbstractSmartComponent {
     this._statisticClickHandler = null;
   }
 
-  setFilters(filters) {
-    this._filters = filters;
-  }
-
   getTemplate() {
     return createFilterTemplate(this._filters);
   }

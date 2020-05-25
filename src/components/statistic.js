@@ -219,12 +219,6 @@ export default class Statistic extends AbstractSmartComponent {
     this._chart = createChart(this._films);
   }
 
-  setStatsChangeHandler(handler) {
-    this.getElement().querySelector(`.statistic__filters`)
-      .addEventListener(`change`, handler);
-    this._statsChangeHandler = handler;
-  }
-
   rerender() {
     super.rerender();
     if (this._chart) {
@@ -236,5 +230,11 @@ export default class Statistic extends AbstractSmartComponent {
 
   recoveryListeners() {
     this.setStatsChangeHandler(this._statsChangeHandler);
+  }
+
+  setStatsChangeHandler(handler) {
+    this.getElement().querySelector(`.statistic__filters`)
+      .addEventListener(`change`, handler);
+    this._statsChangeHandler = handler;
   }
 }

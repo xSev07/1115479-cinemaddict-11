@@ -89,7 +89,6 @@ export default class FilmsController {
   _onShowMoreButtonClick() {
     const prevFilmCount = this._showingFilmsCount;
     this._showingFilmsCount += FilmsQuantity.SHOWING_BY_BUTTON;
-
     this._renderFilmsCards(this._filmsContainerElement, this._filmsModel.getFilms(), prevFilmCount, this._showingFilmsCount);
     if (this._showingFilmsCount >= this._filmsModel.getFilms().length) {
       remove(this._showMoreButtonComponent);
@@ -97,24 +96,25 @@ export default class FilmsController {
   }
 
   _onDataChange(oldData, newData) {
-    const Index = this._getFilmIndexInControllers(oldData.id);
-    this._showedFilmController[Index.base].setStatusDisabled(true);
-    if (Index.additional !== -1) {
-      this._showedAdditionalFilmController[Index.additional].setStatusDisabled(true);
-    }
+    const index = this._getFilmIndexInControllers(oldData.id);
+    this._setFilmStatusDisabled(index, true);
     this._api.updateFilm(oldData.id, newData)
       .then((film) => {
         const isSuccess = this._filmsModel.updateFilm(oldData.id, film);
         if (isSuccess) {
-          this._renderUpdatedFilm(film, Index);
+          this._renderUpdatedFilm(film, index);
         }
       })
       .catch(() => {
-        this._showedFilmController[Index.base].setStatusDisabled(false);
-        if (Index.additional !== -1) {
-          this._showedAdditionalFilmController[Index.additional].setStatusDisabled(false);
-        }
+        this._setFilmStatusDisabled(index, false);
       });
+  }
+
+  _setFilmStatusDisabled(index, status) {
+    this._showedFilmController[index.base].setStatusDisabled(status);
+    if (index.additional !== -1) {
+      this._showedAdditionalFilmController[index.additional].setStatusDisabled(status);
+    }
   }
 
   _getFilmIndexInControllers(id) {
@@ -124,11 +124,11 @@ export default class FilmsController {
     };
   }
 
-  _renderUpdatedFilm(film, Index) {
-    this._showedFilmController[Index.base].render(film);
+  _renderUpdatedFilm(film, index) {
+    this._showedFilmController[index.base].render(film);
 
-    if (Index.additional !== -1) {
-      this._showedAdditionalFilmController[Index.additional].render(film);
+    if (index.additional !== -1) {
+      this._showedAdditionalFilmController[index.additional].render(film);
     }
   }
 
@@ -144,8 +144,8 @@ export default class FilmsController {
         break;
     }
 
-    const Index = this._getFilmIndexInControllers(targetFilm.id);
-    this._renderUpdatedFilm(targetFilm, Index);
+    const index = this._getFilmIndexInControllers(targetFilm.id);
+    this._renderUpdatedFilm(targetFilm, index);
   }
 
   _onViewChange() {

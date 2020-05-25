@@ -96,9 +96,16 @@ export default class FilmController {
         const newCommentData = this._filmDetailsComponent.getNewCommentData();
         const newComment = new Comment(newCommentData);
 
+        // заблокировать форму
+
         this._api.createComment(newComment, this._film.id)
           .then((response) => {
             this._onCommentChange(response.comments[response.comments.length - 1], response.film, CommentMode.ADD);
+          })
+          .catch(() => {
+            // разблокировать форму
+            // покачивание головой
+            // красная обводка форме ввода
           });
       }
     });

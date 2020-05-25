@@ -200,12 +200,12 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   setWatchedClickHandler(handler) {
-    this.getElement().querySelector(`#watched`).addEventListener(`change`, handler);
+    this.getElement().querySelector(`#watched`).addEventListener(`click`, handler);
     this._watchedClickHandler = handler;
   }
 
   setFavoriteClickHandler(handler) {
-    this.getElement().querySelector(`#favorite`).addEventListener(`change`, handler);
+    this.getElement().querySelector(`#favorite`).addEventListener(`click`, handler);
     this._favoriteClickHandler = handler;
   }
 

@@ -87,4 +87,3 @@ export const getWatchedFilmsByPeriod = (films, period) => {
   targetDate.setHours(0, 0, 0);
   return watchedFilms.filter((it) => it.watchingDate >= targetDate);
 };
-// tunc

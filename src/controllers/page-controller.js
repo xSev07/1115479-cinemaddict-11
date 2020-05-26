@@ -6,9 +6,9 @@ import ProfileComponent from "../components/profile-component";
 import SortComponent from "../components/sort-component";
 import StatisticComponent from "../components/statistic-component";
 import FilmsComponent from "../components/films-component";
-import FilmsController from "./films";
+import FilmsController from "./films-controller";
 import FilmsModel from "../models/films";
-import FilterController from "../controllers/filter";
+import FilterController from "./filter-controller";
 import FooterStatisticsComponent from "../components/footer-statistics-component";
 import FilmsNoData from "../components/films-no-data";
 

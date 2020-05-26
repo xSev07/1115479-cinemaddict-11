@@ -1,6 +1,6 @@
 import {PlaceInsert, remove, render} from "../utils/render";
 import {sortFilms} from "../utils/common";
-import FilmController from "./film";
+import FilmController from "./film-controller";
 import {AdditionalCategory, CommentMode, FilmsQuantity, SortType} from "../const";
 import ShowMoreButtonComponent from "../components/show-more-button-component";
 import FilmsExtra from "../components/films-extra";

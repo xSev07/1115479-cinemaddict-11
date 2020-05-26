@@ -1,15 +1,8 @@
 import PageController from "./controllers/page-controller";
-
-const moment = require(`moment`);
-const momentDurationFormatSetup = require(`moment-duration-format`);
+import moment from "moment";
+import momentDurationFormatSetup from "moment-duration-format";
 
 momentDurationFormatSetup(moment);
 
 const pageController = new PageController();
 pageController.render();
-
-// api.getFilms()
-//   .then((films) => {
-//     const pageController = new PageController(films);
-//     pageController.render();
-//   });

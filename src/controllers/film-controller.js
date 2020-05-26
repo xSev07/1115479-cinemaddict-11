@@ -2,8 +2,8 @@ import {remove, render, replace} from "../utils/render";
 import FilmCardComponent from "../components/film-card-component";
 import FilmDetailsComponent from "../components/film-details-component";
 import {CommentMode, KeyCode} from "../const";
-import Film from "../models/film";
-import Comment from "../models/comment";
+import FilmModel from "../models/film-model";
+import CommentModel from "../models/comment-model";
 
 const SHAKE_ANIMATION_TIMEOUT = 600;
 
@@ -93,7 +93,7 @@ export default class FilmController {
 
   _onDataUpdate(evt, film, propertyName) {
     evt.preventDefault();
-    const newFilm = Film.clone(film);
+    const newFilm = FilmModel.clone(film);
     newFilm[propertyName] = !newFilm[propertyName];
     if (propertyName === FilmStatus.WATCHED) {
       newFilm.watchingDate = newFilm[propertyName] ? new Date() : new Date(0);
@@ -119,7 +119,7 @@ export default class FilmController {
         this._filmDetailsComponent.setNewCommentFormDisabled(true);
         this._filmDetailsComponent.setCommentError(false);
         const newCommentData = this._filmDetailsComponent.getNewCommentData();
-        const newComment = new Comment(newCommentData);
+        const newComment = new CommentModel(newCommentData);
 
         this._api.createComment(newComment, this._film.id)
           .then((response) => {

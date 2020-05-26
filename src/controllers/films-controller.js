@@ -4,7 +4,7 @@ import FilmController from "./film-controller";
 import {AdditionalCategory, CommentMode, FilmsQuantity, SortType} from "../const";
 import ShowMoreButtonComponent from "../components/show-more-button-component";
 import FilmsExtra from "../components/films-extra";
-import CommentsModel from "../models/comments";
+import CommentsModel from "../models/comments-model";
 
 const siteFooterElement = document.querySelector(`.footer`);
 

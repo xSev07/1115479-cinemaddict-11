@@ -1,5 +1,5 @@
-import Film from "./models/film";
-import Comment from "./models/comment";
+import FilmModel from "./models/film-model";
+import CommentModel from "./models/comment-model";
 
 const Method = {
   GET: `GET`,
@@ -27,7 +27,7 @@ const API = class {
       url: `movies`
     })
       .then((response) => response.json())
-      .then(Film.parseFilms);
+      .then(FilmModel.parseFilms);
   }
 
   getComments(id) {
@@ -35,7 +35,7 @@ const API = class {
       url: `comments/${id}`
     })
       .then((response) => response.json())
-      .then(Comment.parseComments);
+      .then(CommentModel.parseComments);
   }
 
   updateFilm(id, data) {
@@ -46,7 +46,7 @@ const API = class {
       headers: new Headers({"Content-Type": `application/json`})
     })
       .then((response) => response.json())
-      .then(Film.parseFilm);
+      .then(FilmModel.parseFilm);
   }
 
   deleteComment(id) {
@@ -66,8 +66,8 @@ const API = class {
       .then((response) => response.json())
       .then((response) => {
         return {
-          film: Film.parseFilm(response.movie),
-          comments: Comment.parseComments(response.comments),
+          film: FilmModel.parseFilm(response.movie),
+          comments: CommentModel.parseComments(response.comments),
         };
       });
   }

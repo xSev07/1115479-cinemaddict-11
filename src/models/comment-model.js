@@ -8,7 +8,6 @@ export default class CommentModel {
   }
 
   toRaw() {
-    debugger
     return {
       "comment": this.text,
       "date": this.date.toISOString(),

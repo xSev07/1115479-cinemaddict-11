@@ -27,7 +27,7 @@ const getTopGenre = (films) => {
     genre: ``,
     count: 0
   };
-  for (let key in genresStatistic) {
+  for (const key in genresStatistic) {
     if ({}.hasOwnProperty.call(genresStatistic, key)) {
       const currentValue = genresStatistic[key];
       if (currentValue > maxGenre.count) {
@@ -44,7 +44,7 @@ const getChartData = (films) => {
   const genresStatistic = getGenresStatistic(watchedFilms);
 
   const genresArray = [];
-  for (let key in genresStatistic) {
+  for (const key in genresStatistic) {
     if ({}.hasOwnProperty.call(genresStatistic, key)) {
       genresArray.push({
         genre: key,

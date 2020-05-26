@@ -53,7 +53,7 @@ export const getWatchedFilms = (films) => {
 };
 
 export const getProfileRank = (films) => {
-  let count = getWatchedFilms(films).length;
+  const count = getWatchedFilms(films).length;
   let rank = ``;
   if (count > 0 && count <= 10) {
     rank = Rank.LOW;

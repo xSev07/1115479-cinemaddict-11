@@ -11,7 +11,7 @@ const createSortTemplate = (sortType = SortType.DEFAULT) => {
   `);
 };
 
-export default class Sort extends AbstractSmartComponent {
+export default class SortComponent extends AbstractSmartComponent {
   constructor() {
     super();
     this._currentSortType = SortType.DEFAULT;
@@ -24,6 +24,10 @@ export default class Sort extends AbstractSmartComponent {
 
   getTemplate() {
     return createSortTemplate(this._currentSortType);
+  }
+
+  recoveryListeners() {
+    this.setClickHandler(this._sortClickHandler);
   }
 
   setClickHandler(handler) {
@@ -44,9 +48,5 @@ export default class Sort extends AbstractSmartComponent {
       this._currentSortType = sortType;
       handler(this._currentSortType);
     });
-  }
-
-  recoveryListeners() {
-    this.setClickHandler(this._sortClickHandler);
   }
 }

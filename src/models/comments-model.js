@@ -1,13 +1,11 @@
+import {CommentMode} from "../const";
+
 export default class CommentsModel {
   constructor(comments, onDataChange) {
     this._comments = comments;
     this._onDataChange = onDataChange;
 
     this._dataChangeHandlers = [];
-  }
-
-  setComments(comments) {
-    this._comments = comments;
   }
 
   getComment(id) {
@@ -25,11 +23,10 @@ export default class CommentsModel {
     const deletedComment = this._comments[index];
 
     this._comments = [].concat(this._comments.slice(0, index), this._comments.slice(index + 1));
-    this._onDataChange(deletedComment);
+    this._onDataChange(deletedComment, undefined, CommentMode.DELETE);
   }
 
   addComment(comment) {
-    comment.id = Math.random();
     this._comments = [].concat(comment, this._comments);
     this._callHandlers(this._dataChangeHandlers);
   }

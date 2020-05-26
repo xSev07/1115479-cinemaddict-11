@@ -42,6 +42,8 @@ export const FilterType = {
 
 export const KeyCode = {
   ENTER: 13,
+  ESC: `Esc`,
+  ESCAPE: `Escape`,
 };
 
 export const Pages = {
@@ -58,4 +60,17 @@ export const Rank = {
   LOW: `novice`,
   MIDDLE: `fan`,
   HIGH: `movie buff`,
+};
+
+export const Period = {
+  ALL: `all-time`,
+  TODAY: `today`,
+  WEEK: `week`,
+  MONTH: `month`,
+  YEAR: `year`,
+};
+
+export const CommentMode = {
+  ADD: `adding`,
+  DELETE: `deleting`
 };

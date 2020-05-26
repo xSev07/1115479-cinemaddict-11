@@ -1,5 +1,5 @@
-import Film from "./models/film";
-import Comment from "./models/comment";
+import FilmModel from "./models/film-model";
+import CommentModel from "./models/comment-model";
 
 const Method = {
   GET: `GET`,
@@ -27,26 +27,49 @@ const API = class {
       url: `movies`
     })
       .then((response) => response.json())
-      .then(Film.parseFilms);
+      .then(FilmModel.parseFilms);
   }
 
-  getComments(filmId) {
+  getComments(id) {
     return this._load({
-      url: `comments/${filmId}`
+      url: `comments/${id}`
     })
       .then((response) => response.json())
-      .then(Comment.parseComments);
+      .then(CommentModel.parseComments);
   }
 
   updateFilm(id, data) {
     return this._load({
       url: `movies/${id}`,
-      method: `PUT`,
+      method: Method.PUT,
       body: JSON.stringify(data.toRaw()),
       headers: new Headers({"Content-Type": `application/json`})
     })
       .then((response) => response.json())
-      .then(Film.parseFilm);
+      .then(FilmModel.parseFilm);
+  }
+
+  deleteComment(id) {
+    return this._load({
+      url: `comments/${id}`,
+      method: Method.DELETE
+    });
+  }
+
+  createComment(data, filmId) {
+    return this._load({
+      url: `comments/${filmId}`,
+      method: Method.POST,
+      body: JSON.stringify(data.toRaw()),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        return {
+          film: FilmModel.parseFilm(response.movie),
+          comments: CommentModel.parseComments(response.comments),
+        };
+      });
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {

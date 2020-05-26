@@ -1,15 +1,15 @@
 import API from "../api";
 import {FilmsQuantity, NoDataStatus, Pages, SortType} from "../const";
 import {remove, render} from "../utils/render";
-import {getProfileRank, sortFilms} from "../utils/common";
-import Profile from "../components/profile";
-import Sort from "../components/sort";
-import Statistic from "../components/statistic";
-import Films from "../components/films";
-import FilmsController from "./films";
-import FilmsModel from "../models/films";
-import FilterController from "../controllers/filter";
-import FooterStatistics from "../components/footer-statistics";
+import {getProfileRank, getWatchedFilmsByPeriod, sortFilms} from "../utils/common";
+import ProfileComponent from "../components/profile-component";
+import SortComponent from "../components/sort-component";
+import StatisticComponent from "../components/statistic-component";
+import FilmsComponent from "../components/films-component";
+import FilmsController from "./films-controller";
+import FilmsModel from "../models/films-model";
+import FilterController from "./filter-controller";
+import FooterStatisticsComponent from "../components/footer-statistics-component";
 import FilmsNoData from "../components/films-no-data";
 
 const AUTHORIZATION = `Basic gfjdoHFJDL59fdsfds7`;
@@ -23,21 +23,21 @@ export default class PageController {
     this._siteMainElement = document.querySelector(`.main`);
     this._siteFooterStatisticsElement = document.querySelector(`.footer__statistics`);
     this._showingFilmsCount = FilmsQuantity.SHOWING_ON_START;
-    // this._films = [];
-    // this._sortedFilms = [];
     this._filmsModel = new FilmsModel();
-    this._profileComponent = new Profile();
-    this._sortComponent = new Sort();
-    this._filmsComponent = new Films();
-    // this._filmsController = new FilmsController(this._filmsComponent, this._filmsModel);
+    this._profileComponent = new ProfileComponent();
+    this._sortComponent = new SortComponent();
+    this._filmsComponent = new FilmsComponent();
     this._filmsController = null;
-    this._statistic = new Statistic();
-    this._footerComponent = new FooterStatistics(0);
+    this._statistic = new StatisticComponent();
+    this._footerComponent = new FooterStatisticsComponent(0);
     this._onPageChange = this._onPageChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
+    this._onStatsChange = this._onStatsChange.bind(this);
+    this._onFilmChange = this._onFilmChange.bind(this);
     this._sortComponent.setClickHandler(this._onSortTypeChange);
     this._filterController = new FilterController(this._siteMainElement, this._filmsModel, this._onPageChange);
     this._statistic.setStatsChangeHandler(this._onStatsChange);
+    this._filmsModel.setDataChangeHandler(this._onFilmChange);
   }
 
   render() {
@@ -84,11 +84,8 @@ export default class PageController {
       throw new Error(`No films in base`);
     }
     const rank = getProfileRank(films);
-    // this._films = films;
     this._filmsModel.setFilms(films);
-    remove(this._profileComponent);
-    this._profileComponent.setRank(rank);
-    render(this._siteHeaderElement, this._profileComponent);
+    this._changeRank(rank);
     this._filterController.render();
     remove(this._filmsNoData);
     render(this._siteMainElement, this._filmsComponent);
@@ -107,10 +104,8 @@ export default class PageController {
       case Pages.STATISTIC:
         this._statistic.setFilms(this._filmsModel.getFilmsAll());
         this._statistic.rerender();
-        this._statistic.createChart();
         this.hide(this._sortComponent);
         this.hide(this._filmsComponent);
-        // this.show(this._statistic);
         break;
       case Pages.FILMS:
         this._sortComponent.setSortType(SortType.DEFAULT);
@@ -125,16 +120,30 @@ export default class PageController {
 
   _onSortTypeChange(sortType) {
     this._sortComponent.rerender();
-    // this._sortedFilms = sortFilms(this._films, sortType);
-    // this._sortedFilms = sortFilms(this._filmsModel.getFilmsAll(), sortType);
     const sortedFilms = sortFilms(this._filmsModel.getFilmsAll(), sortType);
     this._filmsModel.setFilms(sortedFilms);
     this._filmsController.renderFilmsAfterSorting(0, this._showingFilmsCount);
-    // this._filmsController.renderFilmsAfterSorting(this._sortedFilms, 0, this._showingFilmsCount);
   }
 
-  // _onStatsChange(evt) {
-  _onStatsChange() {
-    // console.log(evt.target.value);
+  _onStatsChange(evt) {
+    const filmsByPeriod = getWatchedFilmsByPeriod(this._filmsModel.getFilmsAll(), evt.target.value);
+    this._statistic.setFilms(filmsByPeriod);
+    this._statistic.setPeriod(evt.target.value);
+    this._statistic.rerender();
+  }
+
+  _onFilmChange() {
+    const rank = getProfileRank(this._filmsModel.getFilmsAll());
+    const oldRank = this._profileComponent.getRank(rank);
+    if (oldRank !== rank) {
+      this._changeRank(rank);
+    }
+  }
+
+  _changeRank(rank) {
+    remove(this._profileComponent);
+    this._profileComponent.setRank(rank);
+    render(this._siteHeaderElement, this._profileComponent);
+    this._statistic.setRank(rank);
   }
 }

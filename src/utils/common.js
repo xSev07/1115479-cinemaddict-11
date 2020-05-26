@@ -1,4 +1,4 @@
-import {Rank, SortType} from "../const";
+import {Period, Rank, SortType} from "../const";
 import moment from "moment";
 
 export const getFormatedNumber = (number) => {
@@ -10,14 +10,7 @@ export const getFormatedDate = (date) => {
 };
 
 export const getFormatedCommentDate = (date) => {
-  const currentDate = moment(new Date());
-  const targetDate = moment(date);
-  const diffDays = currentDate.diff(targetDate, `days`);
-  if (diffDays > 5) {
-    return targetDate.startOf(`day`).fromNow();
-  } else {
-    return targetDate.format(`YYYY/MM/DD hh:mm`);
-  }
+  return moment(date).fromNow();
 };
 
 export const sortFilms = (films, sortType) => {
@@ -60,7 +53,7 @@ export const getWatchedFilms = (films) => {
 };
 
 export const getProfileRank = (films) => {
-  let count = getWatchedFilms(films).length;
+  const count = getWatchedFilms(films).length;
   let rank = ``;
   if (count > 0 && count <= 10) {
     rank = Rank.LOW;
@@ -70,4 +63,27 @@ export const getProfileRank = (films) => {
     rank = Rank.HIGH;
   }
   return rank;
+};
+
+export const getWatchedFilmsByPeriod = (films, period) => {
+  const watchedFilms = getWatchedFilms(films);
+  let targetDate = new Date();
+  switch (period) {
+    case Period.ALL:
+      targetDate = new Date(0);
+      break;
+    case Period.TODAY:
+      break;
+    case Period.WEEK:
+      targetDate.setDate(targetDate.getDay() - 6);
+      break;
+    case Period.MONTH:
+      targetDate.setMonth(targetDate.getMonth() - 1);
+      break;
+    case Period.YEAR:
+      targetDate.setFullYear(targetDate.getFullYear() - 1);
+      break;
+  }
+  targetDate.setHours(0, 0, 0);
+  return watchedFilms.filter((it) => it.watchingDate >= targetDate);
 };

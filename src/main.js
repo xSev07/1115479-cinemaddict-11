@@ -1,4 +1,4 @@
-import PageController from "./controllers/page";
+import PageController from "./controllers/page-controller";
 
 const moment = require(`moment`);
 const momentDurationFormatSetup = require(`moment-duration-format`);

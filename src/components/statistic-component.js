@@ -1,7 +1,16 @@
 import Chart from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import AbstractSmartComponent from "./abstract-smart-component";
-import {getProfileRank, getWatchedFilms} from "../utils/common";
+import {getWatchedFilms, transformToFirstCapitalSymbol} from "../utils/common";
+import {Period} from "../const";
+
+const periods = [
+  `all-time`,
+  `today`,
+  `week`,
+  `month`,
+  `year`
+];
 
 const getGenresStatistic = (films) => {
   const allGenresRaw = films.map((it) => it.genres);
@@ -18,7 +27,7 @@ const getTopGenre = (films) => {
     genre: ``,
     count: 0
   };
-  for (let key in genresStatistic) {
+  for (const key in genresStatistic) {
     if ({}.hasOwnProperty.call(genresStatistic, key)) {
       const currentValue = genresStatistic[key];
       if (currentValue > maxGenre.count) {
@@ -35,7 +44,7 @@ const getChartData = (films) => {
   const genresStatistic = getGenresStatistic(watchedFilms);
 
   const genresArray = [];
-  for (let key in genresStatistic) {
+  for (const key in genresStatistic) {
     if ({}.hasOwnProperty.call(genresStatistic, key)) {
       genresArray.push({
         genre: key,
@@ -58,9 +67,6 @@ const getChartData = (films) => {
 
 const createChart = (films) => {
   const chartData = getChartData(films);
-  if (chartData.labels.length === 0) {
-    return null;
-  }
   const BAR_HEIGHT = 50;
   const statisticCtx = document.querySelector(`.statistic__chart`);
 
@@ -125,8 +131,15 @@ const createChart = (films) => {
   return myChart;
 };
 
-const createStatisticTemplate = (films) => {
-  const rank = getProfileRank(films);
+const createPeriodTemplate = (period, activePeriod) => {
+  const periodName = transformToFirstCapitalSymbol(period).replace(`-`, ` `);
+  return (`
+    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-${period}" value="${period}" ${period === activePeriod ? `checked` : ``}>
+    <label for="statistic-${period}" class="statistic__filters-label">${periodName}</label>
+  `);
+};
+
+const createStatisticTemplate = (films, activePeriod, rank) => {
   const watchedFilms = getWatchedFilms(films);
   const count = watchedFilms.length;
   const watchedTime = watchedFilms.reduce((acc, it) => {
@@ -135,6 +148,9 @@ const createStatisticTemplate = (films) => {
   const hours = Math.trunc(watchedTime / 60);
   const minutes = watchedTime - hours * 60;
   const genre = getTopGenre(watchedFilms);
+
+  const periodsTemplate = periods.map((it) => createPeriodTemplate(it, activePeriod)).join(`\n`);
+
   return (`
   <section class="statistic">
     <p class="statistic__rank">
@@ -146,20 +162,7 @@ const createStatisticTemplate = (films) => {
     <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
       <p class="statistic__filters-description">Show stats:</p>
 
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-all-time" value="all-time" checked="">
-      <label for="statistic-all-time" class="statistic__filters-label">All time</label>
-
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-today" value="today">
-      <label for="statistic-today" class="statistic__filters-label">Today</label>
-
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week" value="week">
-      <label for="statistic-week" class="statistic__filters-label">Week</label>
-
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="month">
-      <label for="statistic-month" class="statistic__filters-label">Month</label>
-
-      <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="year">
-      <label for="statistic-year" class="statistic__filters-label">Year</label>
+      ${periodsTemplate}
     </form>
 
     <ul class="statistic__text-list">
@@ -185,45 +188,53 @@ const createStatisticTemplate = (films) => {
   `);
 };
 
-export default class Statistic extends AbstractSmartComponent {
+export default class StatisticComponent extends AbstractSmartComponent {
   constructor() {
     super();
     this._films = [];
-    this.clickHandler = null;
+    this._chart = null;
+    this._rank = ``;
+    this._period = Period.ALL;
     this._statsChangeHandler = null;
-    this.setClickHandler = this.setClickHandler.bind(this);
     this.setStatsChangeHandler = this.setStatsChangeHandler.bind(this);
   }
 
   getTemplate() {
-    return createStatisticTemplate(this._films);
+    return createStatisticTemplate(this._films, this._period, this._rank);
   }
 
   setFilms(films) {
     this._films = films;
   }
 
-  createChart() {
-    createChart(this._films);
+  setPeriod(period) {
+    this._period = period;
   }
 
-  setClickHandler(handler) {
-    this.getElement().querySelector(`.statistic`)
-      .addEventListener(`click`, (evt) => {
-        evt.preventDefault();
-        handler();
-      });
-    this.clickHandler = handler;
+  setRank(rank) {
+    this._rank = rank;
+  }
+
+  createChart() {
+    this._chart = createChart(this._films);
+  }
+
+  rerender() {
+    super.rerender();
+    if (this._chart) {
+      this._chart.destroy();
+      this._chart = null;
+    }
+    this.createChart();
+  }
+
+  recoveryListeners() {
+    this.setStatsChangeHandler(this._statsChangeHandler);
   }
 
   setStatsChangeHandler(handler) {
     this.getElement().querySelector(`.statistic__filters`)
       .addEventListener(`change`, handler);
     this._statsChangeHandler = handler;
-  }
-
-  recoveryListeners() {
-    // this.setClickHandler(this.clickHandler);
-    this.setStatsChangeHandler(this._statsChangeHandler);
   }
 }

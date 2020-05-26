@@ -36,7 +36,7 @@ const createEmojiTemplate = (name) => {
   return (`
     <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${name}" value="${name}">
     <label class="film-details__emoji-label" for="emoji-${name}">
-      <img src="./images/emoji/${name}.png" width="30" height="30" alt="emoji" data-emoji-name="${name}">
+      <img src="./images/emoji/${name}.png" width="30" height="30" alt="emoji">
     </label>  
   `);
 };
@@ -151,19 +151,18 @@ const createFilmDetailsTemplate = (film, comments) => {
   `);
 };
 
-export default class FilmDetails extends AbstractSmartComponent {
+export default class FilmDetailsComponent extends AbstractSmartComponent {
   constructor(film, comments) {
     super();
-    this._film = film;
     this._comments = comments;
+    this._film = film;
+    this._commentSubmitHandler = null;
     this._closeClickHandler = null;
+    this._emojiClickHandler = null;
+    this._deleteButtonsClickHandler = null;
     this._watchlistClickHandler = null;
     this._watchedClickHandler = null;
     this._favoriteClickHandler = null;
-    this._emojiClickHandler = null;
-    this._commentSubmitHandler = null;
-
-    this._deleteButtonsClickHandler = null;
   }
 
   getTemplate() {
@@ -179,6 +178,12 @@ export default class FilmDetails extends AbstractSmartComponent {
     return id;
   }
 
+  getNewCommentData() {
+    const comment = this._parseData();
+    comment.comment = sanitizeHtml(comment.comment);
+    return comment;
+  }
+
   recoveryListeners() {
     this.setCloseClickHandler(this._closeClickHandler);
     this.setWatchlistClickHandler(this._watchlistClickHandler);
@@ -187,6 +192,67 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.setEmojiClickHandler(this._emojiClickHandler);
     this.setDeleteButtonsClickHandler(this._deleteButtonsClickHandler);
     this.setCommentSubmitHandler(this._commentSubmitHandler);
+  }
+
+  clearNewComment() {
+    const element = this.getElement();
+    element.querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
+    element.querySelector(`.film-details__comment-input`).value = ``;
+    element.querySelectorAll(`.film-details__emoji-item`).forEach((it) => {
+      it.checked = false;
+    });
+  }
+
+  setStatusDisabled(value) {
+    this.getElement().querySelector(`#watchlist`).disabled = value;
+    this.getElement().querySelector(`#watched`).disabled = value;
+    this.getElement().querySelector(`#favorite`).disabled = value;
+  }
+
+  setCommentError(value) {
+    if (value) {
+      this.getElement().querySelector(`.film-details__comment-input`).classList.add(`film-details__comment-input--error`);
+    } else {
+      this.getElement().querySelector(`.film-details__comment-input`).classList.remove(`film-details__comment-input--error`);
+    }
+  }
+
+  setNewCommentFormDisabled(value) {
+    this.getElement().querySelector(`.film-details__comment-input`).disabled = value;
+    this.getElement().querySelectorAll(`.film-details__emoji-item`)
+      .forEach((it) => {
+        it.disabled = value;
+      });
+  }
+
+  setCommentDeleteButtonDisabled(button, value) {
+    button.innerHTML = value ? `Deleting...` : `Delete`;
+    button.disabled = value;
+  }
+
+  setEmoji(evt) {
+    const selectedEmoji = evt.target.id.replace(`emoji-`, ``);
+
+    const selectedEmojiElement = this.getElement().querySelector(`.film-details__add-emoji-label`);
+    selectedEmojiElement.innerHTML = `<img src="images/emoji/${selectedEmoji}.png" width="55" height="55" alt="emoji-${selectedEmoji}">`;
+  }
+
+  _parseData() {
+    const result = {
+      comment: ``,
+      emotion: `smile`,
+      date: new Date(),
+    };
+    const newCommentElement = this.getElement().querySelector(`.film-details__new-comment`);
+    const commentTextElement = newCommentElement.querySelector(`.film-details__comment-input`);
+    const allEmojis = newCommentElement.querySelectorAll(`.film-details__emoji-item`);
+    result.comment = commentTextElement.value;
+    allEmojis.forEach((it) => {
+      if (it.checked) {
+        result.emotion = it.value;
+      }
+    });
+    return result;
   }
 
   setCloseClickHandler(handler) {
@@ -200,35 +266,19 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   setWatchedClickHandler(handler) {
-    this.getElement().querySelector(`#watched`).addEventListener(`change`, handler);
+    this.getElement().querySelector(`#watched`).addEventListener(`click`, handler);
     this._watchedClickHandler = handler;
   }
 
   setFavoriteClickHandler(handler) {
-    this.getElement().querySelector(`#favorite`).addEventListener(`change`, handler);
+    this.getElement().querySelector(`#favorite`).addEventListener(`click`, handler);
     this._favoriteClickHandler = handler;
   }
 
-  setStatusDisabled(value) {
-    this.getElement().querySelector(`#watchlist`).disabled = value;
-    this.getElement().querySelector(`#watched`).disabled = value;
-    this.getElement().querySelector(`#favorite`).disabled = value;
-  }
-
   setEmojiClickHandler(handler) {
-    this.getElement().querySelector(`.film-details__emoji-list`).addEventListener(`click`, handler);
+    this.getElement().querySelectorAll(`.film-details__emoji-item`)
+      .forEach((it) => it.addEventListener(`change`, handler));
     this._emojiClickHandler = handler;
-  }
-
-  setEmoji(evt) {
-    if (evt.target.tagName !== `IMG`) {
-      return;
-    }
-
-    const selectedEmoji = evt.target.dataset.emojiName;
-
-    const selectedEmojiElement = this.getElement().querySelector(`.film-details__add-emoji-label`);
-    selectedEmojiElement.innerHTML = `<img src="images/emoji/${selectedEmoji}.png" width="55" height="55" alt="emoji-${selectedEmoji}">`;
   }
 
   setDeleteButtonsClickHandler(handler) {
@@ -241,38 +291,5 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.getElement().querySelector(`.film-details__comment-input`)
       .addEventListener(`keydown`, handler);
     this._commentSubmitHandler = handler;
-  }
-
-  getNewCommentData() {
-    const comment = this._parseData();
-    comment.text = sanitizeHtml(comment.text);
-    return comment;
-  }
-
-  clearNewComment() {
-    const element = this.getElement();
-    element.querySelector(`.film-details__add-emoji-label`).innerHTML = ``;
-    element.querySelector(`.film-details__comment-input`).value = ``;
-    element.querySelectorAll(`.film-details__emoji-item`).forEach((it) => {
-      it.checked = false;
-    });
-  }
-
-  _parseData() {
-    const result = {
-      text: ``,
-      emoji: `smile`,
-      date: new Date(),
-    };
-    const newCommentElement = this.getElement().querySelector(`.film-details__new-comment`);
-    const commentTextElement = newCommentElement.querySelector(`.film-details__comment-input`);
-    const allEmojis = newCommentElement.querySelectorAll(`.film-details__emoji-item`);
-    result.text = commentTextElement.value;
-    allEmojis.forEach((it) => {
-      if (it.checked) {
-        result.emoji = it.value;
-      }
-    });
-    return result;
   }
 }

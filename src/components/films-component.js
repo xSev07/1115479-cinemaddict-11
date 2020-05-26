@@ -12,17 +12,8 @@ const createFilmsTemplate = () => {
   `);
 };
 
-export default class Films extends AbstractComponent {
-  // constructor(data) {
-  //   super();
-  //   this.setData(data);
-  // }
-
+export default class FilmsComponent extends AbstractComponent {
   getTemplate() {
     return createFilmsTemplate();
   }
-
-  // setData(data) {
-  //   this._haveData = !!data.length;
-  // }
 }

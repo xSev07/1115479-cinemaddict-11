@@ -1,7 +1,7 @@
 import {emojis} from "../const";
 import {getFormatedCommentDate, getFormatedDate, getFormatedNumber} from "../utils/common";
 import AbstractSmartComponent from "./abstract-smart-component";
-const sanitizeHtml = require(`sanitize-html`);
+import sanitizeHtml from "sanitize-html";
 
 const createCommentTemplate = (comment) => {
   const {id, text: notSanitizedText, emoji, author: notSanitizedAuthor, date} = comment;

@@ -2,7 +2,7 @@ import {PlaceInsert, remove, render} from "../utils/render";
 import {sortFilms} from "../utils/common";
 import FilmController from "./film";
 import {AdditionalCategory, CommentMode, FilmsQuantity, SortType} from "../const";
-import ShowMoreButton from "../components/show-more-button";
+import ShowMoreButtonComponent from "../components/show-more-button-component";
 import FilmsExtra from "../components/films-extra";
 import CommentsModel from "../models/comments";
 
@@ -16,7 +16,7 @@ export default class FilmsController {
     this._showedAdditionalFilmController = [];
     this._api = api;
     this._showingFilmsCount = FilmsQuantity.SHOWING_ON_START;
-    this._showMoreButtonComponent = new ShowMoreButton();
+    this._showMoreButtonComponent = new ShowMoreButtonComponent();
     this._filmsExtraRateComponent = null;
     this._filmsExtraCommentComponent = null;
     this._filmsElement = this._container.getElement();

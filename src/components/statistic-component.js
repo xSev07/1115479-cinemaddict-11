@@ -188,7 +188,7 @@ const createStatisticTemplate = (films, activePeriod, rank) => {
   `);
 };
 
-export default class Statistic extends AbstractSmartComponent {
+export default class StatisticComponent extends AbstractSmartComponent {
   constructor() {
     super();
     this._films = [];

@@ -1,6 +1,6 @@
 import {FilterType, Pages} from "../const";
 import {render, replace} from "../utils/render";
-import FilterComponent from "../components/filter";
+import FilterComponent from "../components/filter-component";
 import {getFilmsByFilter} from "../utils/filter";
 
 export default class FilterController {

@@ -1,6 +1,6 @@
 import {remove, render, replace} from "../utils/render";
-import FilmCard from "../components/film-card";
-import FilmDetails from "../components/film-details";
+import FilmCardComponent from "../components/film-card-component";
+import FilmDetailsComponent from "../components/film-details-component";
 import {CommentMode, KeyCode} from "../const";
 import Film from "../models/film";
 import Comment from "../models/comment";
@@ -33,14 +33,14 @@ export default class FilmController {
     const oldFilmComponent = this._filmComponent;
     const oldFilmDetailsComponent = this._filmDetailsComponent;
 
-    this._filmComponent = new FilmCard(film);
+    this._filmComponent = new FilmCardComponent(film);
     this._filmComponent.setOpenClickHandler(this._openFilmDetails);
     this._setStatusClickHandlers(this._filmComponent, film);
 
     this._commentsModel = commentsModel || this._commentsModel;
     const comments = film.comments.map((it) => this._commentsModel.getComment(it));
 
-    this._filmDetailsComponent = new FilmDetails(film, comments);
+    this._filmDetailsComponent = new FilmDetailsComponent(film, comments);
     this._filmDetailsComponent.setCloseClickHandler(this._closeFilmDetails);
     this._setStatusClickHandlers(this._filmDetailsComponent, film);
     this._onEmojiClick();

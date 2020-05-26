@@ -12,7 +12,7 @@ const createFilmsTemplate = () => {
   `);
 };
 
-export default class Films extends AbstractComponent {
+export default class FilmsComponent extends AbstractComponent {
   getTemplate() {
     return createFilmsTemplate();
   }

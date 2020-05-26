@@ -4,7 +4,7 @@ const createFooterStatistics = (count) => {
   return `<p>${count.toLocaleString()} movies inside</p>`;
 };
 
-export default class FooterStatistics extends AbstractComponent {
+export default class FooterStatisticsComponent extends AbstractComponent {
   constructor(count) {
     super();
     this._filmsCount = count;

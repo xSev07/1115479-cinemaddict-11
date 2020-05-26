@@ -151,7 +151,7 @@ const createFilmDetailsTemplate = (film, comments) => {
   `);
 };
 
-export default class FilmDetails extends AbstractSmartComponent {
+export default class FilmDetailsComponent extends AbstractSmartComponent {
   constructor(film, comments) {
     super();
     this._comments = comments;

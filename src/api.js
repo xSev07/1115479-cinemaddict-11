@@ -8,8 +8,13 @@ const Method = {
   DELETE: `DELETE`
 };
 
+const ResponseStatus = {
+  OK: 200,
+  REDIRECT: 300
+};
+
 const checkStatus = (response) => {
-  if (response.status >= 200 && response.status < 300) {
+  if (response.status >= ResponseStatus.OK && response.status < ResponseStatus.REDIRECT) {
     return response;
   } else {
     throw new Error(`${response.status}: ${response.statusText}`);

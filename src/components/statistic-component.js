@@ -43,21 +43,21 @@ const getChartData = (films) => {
   const watchedFilms = getWatchedFilms(films);
   const genresStatistic = getGenresStatistic(watchedFilms);
 
-  const genresArray = [];
+  const genres = [];
   for (const key in genresStatistic) {
     if ({}.hasOwnProperty.call(genresStatistic, key)) {
-      genresArray.push({
+      genres.push({
         genre: key,
         count: genresStatistic[key]
       });
     }
   }
-  genresArray.sort((a, b) => b.count - a.count);
+  genres.sort((a, b) => b.count - a.count);
   const result = {
     labels: [],
     data: []
   };
-  genresArray.forEach((it) => {
+  genres.forEach((it) => {
     result.labels.push(it.genre);
     result.data.push(it.count);
   });

@@ -12,8 +12,8 @@ export default class FilmsController {
   constructor(container, filmsModel, comments, api) {
     this._container = container;
     this._filmsModel = filmsModel;
-    this._showedFilmController = [];
-    this._showedAdditionalFilmController = [];
+    this._showedFilmsControllers = [];
+    this._showedAdditionalFilmsControllers = [];
     this._api = api;
     this._showingFilmsCount = FilmsQuantity.SHOWING_ON_START;
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
@@ -41,7 +41,7 @@ export default class FilmsController {
   render() {
     this._renderFilmsCards(this._filmsContainerElement, this._filmsModel.getFilms(), 0, this._showingFilmsCount);
     this._renderShowMoreButton();
-    if (this._showedAdditionalFilmController.length === 0) {
+    if (this._showedAdditionalFilmsControllers.length === 0) {
       this._renderExtraFilms();
     }
   }
@@ -54,9 +54,9 @@ export default class FilmsController {
         return filmController;
       });
     if (additional) {
-      this._showedAdditionalFilmController = this._showedAdditionalFilmController.concat(newFilms);
+      this._showedAdditionalFilmsControllers = this._showedAdditionalFilmsControllers.concat(newFilms);
     } else {
-      this._showedFilmController = this._showedFilmController.concat(newFilms);
+      this._showedFilmsControllers = this._showedFilmsControllers.concat(newFilms);
     }
   }
 
@@ -85,7 +85,7 @@ export default class FilmsController {
   }
 
   _renderExtraFilms() {
-    this._showedAdditionalFilmController = [];
+    this._showedAdditionalFilmsControllers = [];
     if (this._filmsExtraRateComponent) {
       remove(this._filmsExtraRateComponent);
     }
@@ -130,26 +130,26 @@ export default class FilmsController {
   }
 
   _setFilmStatusDisabled(index, status) {
-    this._showedFilmController[index.base].setStatusDisabled(status);
+    this._showedFilmsControllers[index.base].setStatusDisabled(status);
     if (index.additional !== -1) {
-      this._showedAdditionalFilmController[index.additional].setStatusDisabled(status);
+      this._showedAdditionalFilmsControllers[index.additional].setStatusDisabled(status);
     }
   }
 
   _getFilmIndexInControllers(id) {
     return {
-      base: this._showedFilmController.findIndex((it) => it.compareFilmData(id)),
-      additional: this._showedAdditionalFilmController.findIndex((it) => it.compareFilmData(id))
+      base: this._showedFilmsControllers.findIndex((it) => it.compareFilmData(id)),
+      additional: this._showedAdditionalFilmsControllers.findIndex((it) => it.compareFilmData(id))
     };
   }
 
   _renderUpdatedFilm(film, index) {
     if (index.base !== -1) {
-      this._showedFilmController[index.base].render(film);
+      this._showedFilmsControllers[index.base].render(film);
     }
 
     if (index.additional !== -1) {
-      this._showedAdditionalFilmController[index.additional].render(film);
+      this._showedAdditionalFilmsControllers[index.additional].render(film);
     }
   }
 
@@ -172,8 +172,8 @@ export default class FilmsController {
   }
 
   _onViewChange() {
-    this._showedFilmController.forEach((it) => it.setDefaultView());
-    this._showedAdditionalFilmController.forEach((it) => it.setDefaultView());
+    this._showedFilmsControllers.forEach((it) => it.setDefaultView());
+    this._showedAdditionalFilmsControllers.forEach((it) => it.setDefaultView());
   }
 
   _getChangeFunctions() {
@@ -185,8 +185,8 @@ export default class FilmsController {
   }
 
   _removeFilms() {
-    this._showedFilmController.forEach((it) => it.destroy());
-    this._showedFilmController = [];
+    this._showedFilmsControllers.forEach((it) => it.destroy());
+    this._showedFilmsControllers = [];
   }
 
   _updateFilms() {

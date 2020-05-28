@@ -2,6 +2,14 @@ const CACHE_PREFIX = `cinemaddict--cache`;
 const CACHE_VER = `v1`;
 const CACHE_NAME = `${CACHE_PREFIX}-${CACHE_VER}`;
 
+const ResponseStatus = {
+  OK: 200
+};
+
+const ResponseType = {
+  BASIC: `basic`
+}
+
 self.addEventListener(`install`, (evt) => {
   evt.waitUntil(
     caches.open(CACHE_NAME)
@@ -28,6 +36,7 @@ self.addEventListener(`install`, (evt) => {
           `/images/icons/icon-watchlist-active.svg`
         ]);
       })
+      .catch((err) => console.log(err))
   );
 });
 
@@ -44,6 +53,7 @@ self.addEventListener(`activate`, (evt) => {
         })
           .filter((key) => key !== null)
       ))
+      .catch((err) => console.log(err))
   );
 });
 
@@ -59,7 +69,7 @@ self.addEventListener(`fetch`, (evt) => {
 
         return fetch(request)
           .then((response) => {
-            if (!response || response.status !== 200 || response.type !== `basic`) {
+            if (!response || response.status !== ResponseStatus.OK || response.type !== ResponseType.BASIC) {
               return response;
             }
 
@@ -69,5 +79,6 @@ self.addEventListener(`fetch`, (evt) => {
             return response;
           });
       })
+      .catch((err) => console.log(err))
   );
 });

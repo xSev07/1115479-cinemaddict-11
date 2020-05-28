@@ -1,16 +1,12 @@
 import FilmModel from "../models/film-model";
 import CommentModel from "../models/comment-model";
+import {ResponseStatus} from "../const";
 
 const Method = {
   GET: `GET`,
   POST: `POST`,
   PUT: `PUT`,
   DELETE: `DELETE`
-};
-
-const ResponseStatus = {
-  OK: 200,
-  REDIRECT: 300
 };
 
 const checkStatus = (response) => {

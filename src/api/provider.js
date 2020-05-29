@@ -13,13 +13,17 @@ export default class Provider {
     this._api = api;
     this._storeFilms = storeFilms;
     this._storeComments = storeComments;
+    this._needSync = false;
   }
 
   getFilms() {
     if (isOnline()) {
       return this._api.getFilms()
         .then((films) => {
-          films.forEach((film) => this._storeFilms.setItem(film.id, film.toRaw()));
+          const items = films.reduce((acc, current) => {
+            return Object.assign({}, acc, {[current.id]: current.toRaw()});
+          }, {});
+          this._storeFilms.setItems(items);
           return films;
         });
     }
@@ -31,6 +35,7 @@ export default class Provider {
 
   getComments(id) {
     if (isOnline()) {
+      this._storeComments.clear();
       return this._api.getComments(id)
         .then((comments) => {
           comments.forEach((comment) => this._storeComments.setItem(comment.id, comment.toRaw()));
@@ -52,8 +57,11 @@ export default class Provider {
         });
     }
 
+    this._needSync = true;
     const localFilm = FilmModel.clone(Object.assign(film, {id}));
-    this._storeFilms.setItem(id, localFilm.toRaw());
+    const localRawFilm = localFilm.toRaw();
+    localRawFilm.needSync = true;
+    this._storeFilms.setItem(id, localRawFilm);
 
     return Promise.resolve(localFilm);
   }
@@ -99,5 +107,19 @@ export default class Provider {
     };
 
     return Promise.resolve(localResponse);
+  }
+
+  sync() {
+    if (isOnline() && this._needSync) {
+      const storeFilms = Object.values(this._storeFilms.getItems()).filter((film) => film.needSync);
+      return this._api.sync(storeFilms)
+        .then((response) => {
+          debugger
+          response.updated.forEach((film) => this._storeFilms.setItem(film.id, film));
+          this._needSync = false;
+        });
+    }
+
+    return Promise.reject(new Error(`Sync data failed`));
   }
 }

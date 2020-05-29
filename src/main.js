@@ -22,6 +22,16 @@ const apiWithProvider = new Provider(api, storeFilms, storeComments);
 const pageController = new PageController(apiWithProvider);
 pageController.render();
 
-// window.addEventListener(`load`, () => {
-//   navigator.serviceWorker.register(`/sw.js`);
-// });
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`);
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+
+  apiWithProvider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});

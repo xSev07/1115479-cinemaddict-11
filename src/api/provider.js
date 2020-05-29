@@ -87,7 +87,11 @@ export default class Provider {
   }
 
   sync() {
-    if (isOnline() && this._needSync) {
+    if (!this._needSync) {
+      return true;
+    }
+
+    if (isOnline()) {
       const storeFilms = Object.values(this._storeFilms.getItems()).filter((film) => film.needSync);
       return this._api.sync(storeFilms)
         .then((response) => {

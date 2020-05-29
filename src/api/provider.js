@@ -1,8 +1,5 @@
 import CommentModel from "../models/comment-model";
 import FilmModel from "../models/film-model";
-import {nanoid} from "nanoid";
-
-const LOCAL_AUTHOR = `Unkown Anonymus`;
 
 const isOnline = () => {
   return window.navigator.onLine;
@@ -72,9 +69,7 @@ export default class Provider {
         .then(() => this._storeComments.removeItem(id));
     }
 
-    this._storeComments.removeItem(id);
-
-    return Promise.resolve();
+    return Promise.reject(`No internet`);
   }
 
   createComment(comment, filmId) {
@@ -88,25 +83,7 @@ export default class Provider {
           return response;
         });
     }
-
-    const localNewCommentId = nanoid();
-    const localNewComment = CommentModel.clone(Object.assign(comment, {
-      id: localNewCommentId,
-      author: LOCAL_AUTHOR
-    }));
-
-    const storeFilm = this._storeFilms.getItem(filmId);
-    const localChangedFilm = new FilmModel(storeFilm);
-    localChangedFilm.comments.push(localNewComment.id);
-    this._storeComments.setItem(localNewComment.id, localNewComment.toRaw());
-    this._storeFilms.setItem(localChangedFilm.id, localChangedFilm.toRaw());
-
-    const localResponse = {
-      film: localChangedFilm,
-      comments: [localNewComment]
-    };
-
-    return Promise.resolve(localResponse);
+    return Promise.reject(`No internet`);
   }
 
   sync() {

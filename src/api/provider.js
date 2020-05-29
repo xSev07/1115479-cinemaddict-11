@@ -114,7 +114,6 @@ export default class Provider {
       const storeFilms = Object.values(this._storeFilms.getItems()).filter((film) => film.needSync);
       return this._api.sync(storeFilms)
         .then((response) => {
-          debugger
           response.updated.forEach((film) => this._storeFilms.setItem(film.id, film));
           this._needSync = false;
         });

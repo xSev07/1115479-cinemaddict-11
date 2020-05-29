@@ -12,6 +12,11 @@ export default class Store {
     }
   }
 
+  getItem(id) {
+    const store = this.getItems();
+    return store[id];
+  }
+
   setItem(key, value) {
     const store = this.getItems();
 

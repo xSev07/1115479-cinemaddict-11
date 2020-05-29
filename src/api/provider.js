@@ -1,10 +1,8 @@
 import CommentModel from "../models/comment-model";
 import FilmModel from "../models/film-model";
+import {nanoid} from "nanoid";
 
-const StoreType = {
-  FILMS: `films`,
-  COMMENTS: `comments`
-};
+const LOCAL_AUTHOR = `Unkown Anonymus`;
 
 const isOnline = () => {
   return window.navigator.onLine;
@@ -71,11 +69,35 @@ export default class Provider {
     return Promise.resolve();
   }
 
-  createComment(data, filmId) {
+  createComment(comment, filmId) {
     if (isOnline()) {
-      return this._api.createComment(data, filmId);
+      return this._api.createComment(comment, filmId)
+        .then((response) => {
+          const newComment = response.comments[response.comments.length - 1];
+          this._storeComments.setItem(newComment.id, newComment.toRaw());
+          this._storeFilms.setItem(response.film.id, response.film.toRaw());
+
+          return response;
+        });
     }
 
-    return Promise.reject(`not implemented`);
+    const localNewCommentId = nanoid();
+    const localNewComment = CommentModel.clone(Object.assign(comment, {
+      id: localNewCommentId,
+      author: LOCAL_AUTHOR
+    }));
+
+    const storeFilm = this._storeFilms.getItem(filmId);
+    const localChangedFilm = new FilmModel(storeFilm);
+    localChangedFilm.comments.push(localNewComment.id);
+    this._storeComments.setItem(localNewComment.id, localNewComment.toRaw());
+    this._storeFilms.setItem(localChangedFilm.id, localChangedFilm.toRaw());
+
+    const localResponse = {
+      film: localChangedFilm,
+      comments: [localNewComment]
+    };
+
+    return Promise.resolve(localResponse);
   }
 }

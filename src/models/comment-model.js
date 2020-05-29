@@ -9,9 +9,11 @@ export default class CommentModel {
 
   toRaw() {
     return {
+      "id": this.id,
       "comment": this.text,
       "date": this.date.toISOString(),
-      "emotion": this.emoji
+      "emotion": this.emoji,
+      "author": this.author
     };
   }
 
@@ -21,5 +23,9 @@ export default class CommentModel {
 
   static parseComments(data) {
     return data.map(CommentModel.parseComment);
+  }
+
+  static clone(data) {
+    return new CommentModel(data.toRaw());
   }
 }

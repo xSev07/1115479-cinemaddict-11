@@ -1,4 +1,5 @@
-import Film from "../models/film-model";
+import CommentModel from "../models/comment-model";
+import FilmModel from "../models/film-model";
 
 const StoreType = {
   FILMS: `films`,
@@ -10,25 +11,13 @@ const isOnline = () => {
 };
 
 export default class Provider {
-  constructor(api, store) {
-    // реализовать два хранилища: для комментариев и фильмов
+  constructor(api, storeFilms, storeComments) {
     this._api = api;
-    this._storeFilms = store;
+    this._storeFilms = storeFilms;
+    this._storeComments = storeComments;
   }
 
   getFilms() {
-    // if (isOnline()) {
-    //   return this._api.getFilms()
-    //     .then((films) => {
-    //       const rawFilms = {};
-    //       films.forEach((film) => {
-    //         rawFilms[film.id] = film.toRaw();
-    //       });
-    //       this._storeFilms.setItem(StoreType.FILMS, rawFilms);
-    //       return films;
-    //     });
-    // }
-
     if (isOnline()) {
       return this._api.getFilms()
         .then((films) => {
@@ -37,27 +26,23 @@ export default class Provider {
         });
     }
 
-    return Promise.reject(`not implemented`);
+    const storeFilms = Object.values(this._storeFilms.getItems());
+
+    return Promise.resolve(FilmModel.parseFilms(storeFilms));
   }
 
   getComments(id) {
-    // if (isOnline()) {
-    //   return this._api.getComments(id)
-    //     .then((comments) => {
-    //       const rawComments = {};
-    //       comments.forEach((comment) => {
-    //         rawComments[comment.id] = comment.toRaw();
-    //       });
-    //       this._storeFilms.setItem(StoreType.COMMENTS, rawComments);
-    //       return comments;
-    //     });
-    // }
-
     if (isOnline()) {
-      return this._api.getComments(id);
+      return this._api.getComments(id)
+        .then((comments) => {
+          comments.forEach((comment) => this._storeComments.setItem(comment.id, comment.toRaw()));
+          return comments;
+        });
     }
 
-    return Promise.reject(`not implemented`);
+    const storeComments = Object.values(this._storeComments.getItems());
+
+    return Promise.resolve(CommentModel.parseComments(storeComments));
   }
 
   updateFilm(id, film) {
@@ -69,7 +54,7 @@ export default class Provider {
         });
     }
 
-    const localFilm = Film.clone(Object.assign(film, {id}));
+    const localFilm = FilmModel.clone(Object.assign(film, {id}));
     this._storeFilms.setItem(id, localFilm.toRaw());
 
     return Promise.resolve(localFilm);
@@ -77,10 +62,13 @@ export default class Provider {
 
   deleteComment(id) {
     if (isOnline()) {
-      return this._api.deleteComment(id);
+      return this._api.deleteComment(id)
+        .then(() => this._storeComments.removeItem(id));
     }
 
-    return Promise.reject(`not implemented`);
+    this._storeComments.removeItem(id);
+
+    return Promise.resolve();
   }
 
   createComment(data, filmId) {

@@ -1,4 +1,3 @@
-import API from "../api/api";
 import {FilmsQuantity, NoDataStatus, Pages, SortType} from "../const";
 import {remove, render} from "../utils/render";
 import {getProfileRank, getWatchedFilmsByPeriod, sortFilms} from "../utils/common";
@@ -12,12 +11,9 @@ import FilterController from "./filter-controller";
 import FooterStatisticsComponent from "../components/footer-statistics-component";
 import FilmsNoData from "../components/films-no-data";
 
-const AUTHORIZATION = `Basic gfjdoHFJDL59fdsfds7`;
-const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
-const api = new API(END_POINT, AUTHORIZATION);
-
 export default class PageController {
-  constructor() {
+  constructor(api) {
+    this._api = api;
     this._showedPage = Pages.FILMS;
     this._siteHeaderElement = document.querySelector(`.header`);
     this._siteMainElement = document.querySelector(`.main`);
@@ -54,7 +50,7 @@ export default class PageController {
 
     render(this._siteFooterStatisticsElement, this._footerComponent);
 
-    api.getFilms()
+    this._api.getFilms()
     .then((films) => this._getCommentsAndRender(films))
     .catch(() => {
       this._filmsNoData.setStatus(NoDataStatus.NO_DATA);
@@ -70,11 +66,11 @@ export default class PageController {
   }
 
   _getCommentsAndRender(films) {
-    const commentsPromises = films.map((film) => api.getComments(film.id));
+    const commentsPromises = films.map((film) => this._api.getComments(film.id));
     Promise.all(commentsPromises)
       .then((rawComments) => {
         const comments = [].concat(...rawComments);
-        this._filmsController = new FilmsController(this._filmsComponent, this._filmsModel, comments, api);
+        this._filmsController = new FilmsController(this._filmsComponent, this._filmsModel, comments, this._api);
         this._renderAfterAcceptFilms(films);
       });
   }

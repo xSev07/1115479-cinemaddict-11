@@ -7,6 +7,9 @@ import Store from "./api/store";
 
 momentDurationFormatSetup(moment);
 
+const OFFLINE_MODE = ` [offline]`;
+const SW_PATH = `/sw.js`;
+
 const AUTHORIZATION = `Basic gfjdoHFJDL59fdsfds7`;
 const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 const STORE_PREFIX_FILMS = `cinemaddict-films--localstorage`;
@@ -23,15 +26,15 @@ const pageController = new PageController(apiWithProvider);
 pageController.render();
 
 window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`/sw.js`);
+  navigator.serviceWorker.register(SW_PATH);
 });
 
 window.addEventListener(`online`, () => {
-  document.title = document.title.replace(` [offline]`, ``);
+  document.title = document.title.replace(OFFLINE_MODE, ``);
 
   apiWithProvider.sync();
 });
 
 window.addEventListener(`offline`, () => {
-  document.title += ` [offline]`;
+  document.title += OFFLINE_MODE;
 });

@@ -87,11 +87,14 @@ export default class Provider {
   sync() {
     if (isOnline()) {
       const storeFilms = Object.values(this._storeFilms.getItems()).filter((film) => film.needSync);
-      if (storeFilms) {
+
+      if (storeFilms.length !== 0) {
         return this._api.sync(storeFilms)
           .then((response) => {
             response.updated.forEach((film) => this._storeFilms.setItem(film.id, film));
           });
+      } else {
+        return Promise.resolve();
       }
     }
 

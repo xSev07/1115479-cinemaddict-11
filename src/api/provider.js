@@ -10,7 +10,6 @@ export default class Provider {
     this._api = api;
     this._storeFilms = storeFilms;
     this._storeComments = storeComments;
-    this._needSync = false;
   }
 
   getFilms() {
@@ -54,7 +53,6 @@ export default class Provider {
         });
     }
 
-    this._needSync = true;
     const localFilm = FilmModel.clone(Object.assign(film, {id}));
     const localRawFilm = localFilm.toRaw();
     localRawFilm.needSync = true;
@@ -87,17 +85,14 @@ export default class Provider {
   }
 
   sync() {
-    if (!this._needSync) {
-      return true;
-    }
-
     if (isOnline()) {
       const storeFilms = Object.values(this._storeFilms.getItems()).filter((film) => film.needSync);
-      return this._api.sync(storeFilms)
-        .then((response) => {
-          response.updated.forEach((film) => this._storeFilms.setItem(film.id, film));
-          this._needSync = false;
-        });
+      if (storeFilms) {
+        return this._api.sync(storeFilms)
+          .then((response) => {
+            response.updated.forEach((film) => this._storeFilms.setItem(film.id, film));
+          });
+      }
     }
 
     return Promise.reject(new Error(`Sync data failed`));

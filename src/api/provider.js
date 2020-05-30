@@ -93,9 +93,9 @@ export default class Provider {
           .then((response) => {
             response.updated.forEach((film) => this._storeFilms.setItem(film.id, film));
           });
-      } else {
-        return Promise.resolve();
       }
+
+      return Promise.resolve();
     }
 
     return Promise.reject(new Error(`Sync data failed`));

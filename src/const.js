@@ -74,3 +74,8 @@ export const CommentMode = {
   ADD: `adding`,
   DELETE: `deleting`
 };
+
+export const ResponseStatus = {
+  OK: 200,
+  REDIRECT: 300
+};

@@ -1,16 +1,12 @@
-import FilmModel from "./models/film-model";
-import CommentModel from "./models/comment-model";
+import FilmModel from "../models/film-model";
+import CommentModel from "../models/comment-model";
+import {ResponseStatus} from "../const";
 
 const Method = {
   GET: `GET`,
   POST: `POST`,
   PUT: `PUT`,
   DELETE: `DELETE`
-};
-
-const ResponseStatus = {
-  OK: 200,
-  REDIRECT: 300
 };
 
 const checkStatus = (response) => {
@@ -75,6 +71,16 @@ const API = class {
           comments: CommentModel.parseComments(response.comments),
         };
       });
+  }
+
+  sync(data) {
+    return this._load({
+      url: `movies/sync`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({"Content-Type": `application/json`})
+    })
+      .then((response) => response.json());
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {

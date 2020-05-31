@@ -38,4 +38,3 @@ window.addEventListener(`online`, () => {
 window.addEventListener(`offline`, () => {
   document.title += OFFLINE_MODE;
 });
-// tunc
